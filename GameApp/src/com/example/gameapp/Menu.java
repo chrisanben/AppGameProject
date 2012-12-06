@@ -2,12 +2,9 @@ package com.example.gameapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,7 +33,7 @@ public class Menu extends Activity {
 		optionsButton.setOnClickListener(menuButtonListener);
 		helpButton.setOnClickListener(menuButtonListener);
 		
-		mainTitle.setText("Critical Hit");
+		mainTitle.setText("Critical Hat");
 	}
 
 	private OnClickListener menuButtonListener = new OnClickListener() {
@@ -52,7 +49,6 @@ public class Menu extends Activity {
 				scoreGame();
 				break;
 			case R.id.optionsButton:
-				mainTitle.setText("Options");
 				optionsGame();
 				break;
 			case R.id.helpButton:
@@ -65,8 +61,10 @@ public class Menu extends Activity {
 		}
 
 		private void optionsGame() {
-			// TODO Auto-generated method stub
-			
+			String passString = "Options Menu";
+			Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
+			optionsIntent.putExtra("new_variable", passString);
+			Menu.this.startActivity(optionsIntent);
 		}
 
 		private void helpButton() {

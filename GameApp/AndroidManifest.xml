@@ -22,6 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.gameapp.options" >
+        </activity>
+        <activity
+            android:name="com.example.gameapp.OptionsMenu"
+            android:label="@string/title_activity_options_menu" >
+        </activity>
     </application>
 
 </manifest>
