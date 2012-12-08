@@ -14,6 +14,7 @@ public class Menu extends Activity {
 
 	private boolean mIsBound = false;
 	private TextView mainTitle;
+	private String passdiff;
 	final Context context = this;
 	
 	@Override
@@ -33,8 +34,19 @@ public class Menu extends Activity {
 		optionsButton.setOnClickListener(menuButtonListener);
 		helpButton.setOnClickListener(menuButtonListener);
 		
-		mainTitle.setText("Critical Hat");
+		mainTitle.setText("Critical Hit");
+		
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  if (resultCode == RESULT_OK && requestCode == 101) {
+	    if (data.hasExtra("difficulty")) {
+	    	passdiff = data.getExtras().getString("difficulty");
+	    	mainTitle.setText(passdiff);
+	    }
+	  }
+	} 
 
 	private OnClickListener menuButtonListener = new OnClickListener() {
 		@Override
@@ -61,15 +73,16 @@ public class Menu extends Activity {
 		}
 
 		private void optionsGame() {
-			String passString = "Options Menu";
+			if (passdiff == null) {
+				passdiff = "Normal";
+			}
 			Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
-			optionsIntent.putExtra("new_variable", passString);
-			Menu.this.startActivity(optionsIntent);
+			optionsIntent.putExtra("difficulty", passdiff);
+			startActivityForResult(optionsIntent, 101);
 		}
 
 		private void helpButton() {
 			// TODO Auto-generated method stub
-			
 		}
 
 		private void scoreGame() {

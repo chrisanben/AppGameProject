@@ -15,10 +15,14 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout2=0x7f080000;
+        public static final int easy_button=0x7f08000a;
+        public static final int hard_button=0x7f080009;
         public static final int helpButton=0x7f080006;
         public static final int imageView1=0x7f080002;
-        public static final int menu_settings=0x7f080008;
+        public static final int menu_settings=0x7f08000c;
+        public static final int normal_button=0x7f080008;
         public static final int optionsButton=0x7f080005;
+        public static final int save_button=0x7f08000b;
         public static final int scoreButton=0x7f080004;
         public static final int startButton=0x7f080003;
         public static final int test=0x7f080007;
