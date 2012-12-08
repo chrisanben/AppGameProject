@@ -28,6 +28,10 @@
             android:name="com.example.gameapp.OptionsMenu"
             android:label="@string/title_activity_options_menu" >
         </activity>
+        <activity
+            android:name="com.example.gameapp.GameActivity"
+            android:label="@string/title_activity_game" >
+        </activity>
     </application>
 
 </manifest>
