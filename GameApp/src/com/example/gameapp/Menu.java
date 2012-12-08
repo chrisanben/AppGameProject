@@ -105,7 +105,12 @@ public class Menu extends Activity {
 		}
 
 		private void startGame() {
-			// TODO Auto-generated method stub
+			if (passdiff == null) {
+				passdiff = "Normal";
+			}
+			Intent optionsIntent = new Intent(Menu.this, GameActivity.class);
+			optionsIntent.putExtra("difficulty", passdiff);
+			startActivityForResult(optionsIntent, 102);
 		}
 	};
 

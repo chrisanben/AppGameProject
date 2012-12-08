@@ -5,7 +5,11 @@ import java.util.Random;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +24,7 @@ public class GameActivity extends Activity {
 	private TextView scoreTextView;
 	private LinearLayout gameLayout;
 	private MyCountDownTimer timer;
+	private String difficulty;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +39,11 @@ public class GameActivity extends Activity {
 		gameLayout = (LinearLayout) findViewById(R.id.gameLayout);
 		//gameLayout.setOnClickListener(buttonClickListener);
 		gameLayout.setOnTouchListener(buttonTouchListener);
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			difficulty = extras.getString("difficulty");
+		}
 		
 		button[0] = (ImageButton) findViewById(R.id.button0);
 		button[1] = (ImageButton) findViewById(R.id.button1);
@@ -53,8 +63,29 @@ public class GameActivity extends Activity {
 		}
 		
 		timer.start();
-			
 	}
+	
+	OnTouchListener buttonTouchListener = new OnTouchListener(){
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		int action = event.getAction();
+        if (action == MotionEvent.ACTION_DOWN){
+        	if (v.getId() == R.id.gameLayout) {
+				scoreTextView.setText("LAYOUT");
+			} else {
+			String idString = String.valueOf(((ImageButton) v).getId());
+			scoreTextView.setText(idString);
+			for (int i = 0; i < 9; i++) {
+				button[i].setVisibility(-1);
+			}
+			button[randomButton()].setVisibility(1);
+			
+			}
+        }
+		return false;
+	}
+	};
 
 	public class MyCountDownTimer extends CountDownTimer {
 		
