@@ -43,13 +43,13 @@
         android:text="Hard" />
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/difficulty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/easy_button"
         android:layout_alignLeft="@+id/easy_button"
         android:layout_marginBottom="16dp"
-        android:text="Difficulty"
+        android:text="Difficulty: "
         android:textSize="20sp" />
 
     <Button
@@ -57,8 +57,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="14dp"
-        android:layout_toRightOf="@+id/test"
+        android:layout_alignRight="@+id/hard_button"
+        android:layout_marginBottom="17dp"
         android:text="Save" />
 
 </RelativeLayout>

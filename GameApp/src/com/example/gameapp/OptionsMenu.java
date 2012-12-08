@@ -11,9 +11,8 @@ import android.widget.TextView;
 
 public class OptionsMenu extends Activity {
 
-	private String passeddiff;
 	private String difficulty;
-	private TextView test;
+	private TextView diff;
 	private Integer MY_REQUEST_ID;
 	
 	@Override
@@ -21,7 +20,7 @@ public class OptionsMenu extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options_menu);
 		
-		TextView test = (TextView) findViewById(R.id.test);
+		diff = (TextView) findViewById(R.id.difficulty);
 		Button easy = (Button) findViewById(R.id.easy_button);
 		Button normal = (Button) findViewById(R.id.normal_button);
 		Button hard = (Button) findViewById(R.id.hard_button);
@@ -32,13 +31,12 @@ public class OptionsMenu extends Activity {
 		normal.setOnClickListener(optionsButtonListener);
 		hard.setOnClickListener(optionsButtonListener);
 		
-		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			passeddiff = extras.getString("difficulty");
+			difficulty = extras.getString("difficulty");
 		}
 		
-		test.setText(passeddiff);
+		diff.setText("Difficulty: " + difficulty);
 		
 	}
 	
@@ -56,12 +54,15 @@ public class OptionsMenu extends Activity {
 			switch(v.getId()){
 			case R.id.easy_button:
 				difficulty = "Easy";
+				diff.setText("Difficulty: " + difficulty);
 				break;
 			case R.id.normal_button:
 				difficulty = "Normal";
+				diff.setText("Difficulty: " + difficulty);
 				break;
 			case R.id.hard_button:
 				difficulty = "Hard";
+				diff.setText("Difficulty: " + difficulty);
 				break;
 			case R.id.save_button:
 				finish();
