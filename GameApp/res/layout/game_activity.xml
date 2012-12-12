@@ -6,7 +6,8 @@
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="8dp"
-    tools:context=".GameActivity" >
+    tools:context=".GameActivity"
+    android:background="@drawable/betaback" >
 
     <LinearLayout
         android:id="@+id/buttonLayout"

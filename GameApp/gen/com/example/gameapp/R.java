@@ -11,7 +11,9 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
+        public static final int betaback=0x7f020000;
+        public static final int betasplash=0x7f020001;
+        public static final int ic_launcher=0x7f020002;
     }
     public static final class id {
         public static final int LinearLayout2=0x7f080000;
@@ -49,11 +51,13 @@ public final class R {
         public static final int activity_menu=0x7f030000;
         public static final int activity_options_menu=0x7f030001;
         public static final int game_activity=0x7f030002;
+        public static final int splash_screen=0x7f030003;
     }
     public static final class menu {
         public static final int activity_menu=0x7f070000;
         public static final int activity_options_menu=0x7f070001;
         public static final int game_activity=0x7f070002;
+        public static final int splash_screen=0x7f070003;
     }
     public static final class raw {
         public static final int menu_music=0x7f040000;
@@ -64,6 +68,7 @@ public final class R {
         public static final int menu_settings=0x7f050002;
         public static final int title_activity_game=0x7f050004;
         public static final int title_activity_options_menu=0x7f050003;
+        public static final int title_activity_splash_screen=0x7f050005;
     }
     public static final class style {
         /** 
