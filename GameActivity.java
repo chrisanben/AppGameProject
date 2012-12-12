@@ -18,6 +18,7 @@ public class GameActivity extends Activity {
 	
 	private final long roundTime = 3000;
 	private final long countBy = 1000;
+	private final int BUTTON_INCREMENT = 100;
 	private final String WIN = "You Win!!";
 	private final String LOSE = "You Lose!";
 	private final String ROUND = "Round ";
@@ -25,7 +26,7 @@ public class GameActivity extends Activity {
 	private final String TOO_SLOW_LOSE = "Too Slow!";
 	private final String TOO_SOON_LOSE = "Too Soon!";
 	
-	private long startTime = 5000;
+	private long startTime;
 	private long randomTime;
 	private ImageButton[] button = new ImageButton[9];
 	private int randButton;
@@ -59,10 +60,11 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_activity);
 		
+		startTime = 2000;
 		newWin = 0;
 		score = 0;
 		roundNum = 1;
-		randomTime = 1000 + randomTime();
+		randomTime = 500 + randomTime();
 		waiting = false;
 		buttonHere = false;
 		roundDisplay = true;
@@ -80,7 +82,7 @@ public class GameActivity extends Activity {
 		roundTimer = new MyCountDownTimer(roundTime, countBy);
 		randomTimer = new MyCountDownTimer(randomTime, countBy);
 		buttonTimer = new MyCountDownTimer(startTime, countBy);
-		waitTimer = new MyCountDownTimer(startTime, countBy);
+		waitTimer = new MyCountDownTimer(roundTime, countBy);
 		
 		gameLayout = (LinearLayout) findViewById(R.id.gameLayout);
 		//gameLayout.setOnClickListener(buttonClickListener);
@@ -115,24 +117,26 @@ public class GameActivity extends Activity {
     public boolean onTouch(View v, MotionEvent event) {
 		int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN){
-        	if ((!roundDisplay) || (!waiting)) {
+        	if ((!roundDisplay) && (!waiting)) {
         		if (v.getId() == button[randButton].getId()) {
-        			newWin = 1;
+        			if (newWin == 0) {
+        				newWin = 1;
+        			}
         			buttonHereTextView.setText(String.valueOf(buttonHere));
         			inbetweenTextView.setText(String.valueOf(inbetween));
         			roundDisplayTextView.setText(String.valueOf(roundDisplay));
         			waitingTextView.setText(String.valueOf(waiting));
-        			newWinTextView.setText(String.valueOf(newWin));
-        			if (buttonHere) {
+        			newWinTextView.setText(String.valueOf(newWin));	
+        			/*if (buttonHere) {
     				buttonTimer.cancel();
         			} else if (inbetween) {
     				randomTimer.cancel();
-        			}
+        			}*/
     			} else {
     				newWin = -1;
     				//win = false;
-    				buttonTimer.cancel();
-    				randomTimer.cancel();
+    				//buttonTimer.cancel();
+    				//randomTimer.cancel();
     			}
         	}
         }
@@ -186,13 +190,20 @@ public class GameActivity extends Activity {
 			if (newWin != -1) {
 				if (roundDisplay) {
 					randButton = randomButton();
-					randomTime = 1000 + randomTime();
+					randomTime = 500 + randomTime();
+					randomTimer = null;
+					randomTimer = new MyCountDownTimer(randomTime, countBy);
 					roundTextView.setVisibility(-1);
 					roundDisplay = false;
 					//winLoseTextView.setVisibility(-1);
 					randomTimer.start();
 					inbetween = true;
 				} else if (waiting) {
+					if (startTime - BUTTON_INCREMENT >= 200) {
+						startTime -=  BUTTON_INCREMENT;
+						buttonTimer = null;
+						buttonTimer = new MyCountDownTimer(startTime, countBy);
+					}
 					button[randButton].setVisibility(-1);
 					winLoseTextView.setVisibility(-1);
 					roundTextView.setText(ROUND + String.valueOf(roundNum));
@@ -217,17 +228,13 @@ public class GameActivity extends Activity {
 						roundTimer.start();
 						waiting = true;
 					} else {
-						winLoseTextView.setText("Failed");
-						winLoseTextView.setVisibility(1);
-						roundTextView.setText(FINISHED);
-						roundTextView.setVisibility(1);
+						winLoseTextView.setText("Time's Up!");
+						loseCondition();
 					}
 				}
 			} else {
-				winLoseTextView.setText("Failed");
-				winLoseTextView.setVisibility(1);
-				roundTextView.setText(FINISHED);
-				roundTextView.setVisibility(1);
+				winLoseTextView.setText(TOO_SOON_LOSE);
+				loseCondition();
 			}
 		}
 		
@@ -245,7 +252,7 @@ public class GameActivity extends Activity {
 	public int randomTime() {
 		int rTime;
 		Random random = new Random();
-		rTime = random.nextInt(3000);
+		rTime = random.nextInt(2000);
 		return rTime;
 	}
 	public int randomButton() {
@@ -254,6 +261,15 @@ public class GameActivity extends Activity {
 		rButton = random.nextInt(9);
 		return rButton;
 	}
+	
+	public void loseCondition() {
+		button[randButton].setEnabled(false);
+		winLoseTextView.setVisibility(1);
+		roundTextView.setText(FINISHED);
+		roundTextView.setVisibility(1);
+		
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
