@@ -27,14 +27,21 @@ public final class R {
         public static final int button6=0x7f08000b;
         public static final int button7=0x7f08000c;
         public static final int button8=0x7f08000d;
+        public static final int buttonHereTextView=0x7f080012;
         public static final int buttonLayout=0x7f080001;
         public static final int gameLayout=0x7f080000;
-        public static final int menu_settings=0x7f080010;
+        public static final int inbetweenTextView=0x7f080013;
+        public static final int menu_settings=0x7f080017;
+        public static final int newWinTextView=0x7f080016;
+        public static final int roundDisplayTextView=0x7f080014;
+        public static final int roundTextView=0x7f08000e;
         public static final int row1Layout=0x7f080002;
         public static final int row2Layout=0x7f080006;
         public static final int row3Layout=0x7f08000a;
-        public static final int scoreTextView=0x7f08000e;
-        public static final int timerTextView=0x7f08000f;
+        public static final int scoreTextView=0x7f080010;
+        public static final int timerTextView=0x7f080011;
+        public static final int waitingTextView=0x7f080015;
+        public static final int winLoseTextView=0x7f08000f;
     }
     public static final class layout {
         public static final int game_activity=0x7f030000;

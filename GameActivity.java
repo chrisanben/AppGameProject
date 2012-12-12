@@ -16,14 +16,41 @@ import android.widget.TextView;
 
 public class GameActivity extends Activity {
 	
+	private final long roundTime = 3000;
 	private final long countBy = 1000;
+	private final String WIN = "You Win!!";
+	private final String LOSE = "You Lose!";
+	private final String ROUND = "Round ";
+	private final String FINISHED = "Finished ";
+	private final String TOO_SLOW_LOSE = "Too Slow!";
+	private final String TOO_SOON_LOSE = "Too Soon!";
 	
 	private long startTime = 5000;
+	private long randomTime;
 	private ImageButton[] button = new ImageButton[9];
+	private int randButton;
+	private int score;
+	private int roundNum;
 	private TextView timerTextView;
 	private TextView scoreTextView;
+	private TextView roundTextView;
+	private TextView winLoseTextView;
+	private TextView buttonHereTextView;
+	private TextView inbetweenTextView;
+	private TextView roundDisplayTextView;
+	private TextView waitingTextView;
+	private TextView newWinTextView;
 	private LinearLayout gameLayout;
-	private MyCountDownTimer timer;
+	private MyCountDownTimer roundTimer;
+	private MyCountDownTimer randomTimer;
+	private MyCountDownTimer buttonTimer;
+	private MyCountDownTimer waitTimer;
+	private boolean roundDisplay;
+	private boolean inbetween;
+	private boolean waiting;
+	private boolean buttonHere;
+	private boolean win;
+	private int newWin;
 	
 	
 	
@@ -32,10 +59,28 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_activity);
 		
+		newWin = 0;
+		score = 0;
+		roundNum = 1;
+		randomTime = 1000 + randomTime();
+		waiting = false;
+		buttonHere = false;
+		roundDisplay = true;
+		inbetween = false;
+		win = true;
+		newWinTextView = (TextView) findViewById(R.id.newWinTextView);
+		buttonHereTextView = (TextView) findViewById(R.id.buttonHereTextView);
+		inbetweenTextView = (TextView) findViewById(R.id.inbetweenTextView);
+		roundDisplayTextView = (TextView) findViewById(R.id.roundDisplayTextView);
+		waitingTextView = (TextView) findViewById(R.id.waitingTextView);
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
 		scoreTextView = (TextView) findViewById(R.id.scoreTextView);
-		
-		timer = new MyCountDownTimer(startTime, countBy);
+		roundTextView = (TextView) findViewById(R.id.roundTextView);
+		winLoseTextView = (TextView) findViewById(R.id.winLoseTextView);
+		roundTimer = new MyCountDownTimer(roundTime, countBy);
+		randomTimer = new MyCountDownTimer(randomTime, countBy);
+		buttonTimer = new MyCountDownTimer(startTime, countBy);
+		waitTimer = new MyCountDownTimer(startTime, countBy);
 		
 		gameLayout = (LinearLayout) findViewById(R.id.gameLayout);
 		//gameLayout.setOnClickListener(buttonClickListener);
@@ -56,9 +101,10 @@ public class GameActivity extends Activity {
 		
 		for (int i = 0; i < 9; i++) {
 			button[i].setOnTouchListener(buttonTouchListener);
+			button[i].setVisibility(-1);
 		}
 		
-		timer.start();
+		roundTimer.start();
 			
 	}
 	
@@ -69,17 +115,26 @@ public class GameActivity extends Activity {
     public boolean onTouch(View v, MotionEvent event) {
 		int action = event.getAction();
         if (action == MotionEvent.ACTION_DOWN){
-        	if (v.getId() == R.id.gameLayout) {
-				scoreTextView.setText("LAYOUT");
-			} else {
-			String idString = String.valueOf(((ImageButton) v).getId());
-			scoreTextView.setText(idString);
-			for (int i = 0; i < 9; i++) {
-				button[i].setVisibility(-1);
-			}
-			button[randomButton()].setVisibility(1);
-			
-			}
+        	if ((!roundDisplay) || (!waiting)) {
+        		if (v.getId() == button[randButton].getId()) {
+        			newWin = 1;
+        			buttonHereTextView.setText(String.valueOf(buttonHere));
+        			inbetweenTextView.setText(String.valueOf(inbetween));
+        			roundDisplayTextView.setText(String.valueOf(roundDisplay));
+        			waitingTextView.setText(String.valueOf(waiting));
+        			newWinTextView.setText(String.valueOf(newWin));
+        			if (buttonHere) {
+    				buttonTimer.cancel();
+        			} else if (inbetween) {
+    				randomTimer.cancel();
+        			}
+    			} else {
+    				newWin = -1;
+    				//win = false;
+    				buttonTimer.cancel();
+    				randomTimer.cancel();
+    			}
+        	}
         }
         return false;
 	}
@@ -128,23 +183,70 @@ public class GameActivity extends Activity {
 		//tell them they lost and disable the buttons because the Alert Dialog doesn't work
 		@Override
 		public void onFinish() {
-			timerTextView.setText("FINISHED");
-			/*if (allCleared == false) {
-				winTextView.setText(R.string.you_lose);
-				// AlertDialog.Builder(endGame);
-				for (int row = 0; row < numOfRows; row++) {
-					for (int col = 0; col < rowObjects; col++) {
-						cardImage[row][col].setEnabled(false);
+			if (newWin != -1) {
+				if (roundDisplay) {
+					randButton = randomButton();
+					randomTime = 1000 + randomTime();
+					roundTextView.setVisibility(-1);
+					roundDisplay = false;
+					//winLoseTextView.setVisibility(-1);
+					randomTimer.start();
+					inbetween = true;
+				} else if (waiting) {
+					button[randButton].setVisibility(-1);
+					winLoseTextView.setVisibility(-1);
+					roundTextView.setText(ROUND + String.valueOf(roundNum));
+					roundTextView.setVisibility(1);
+					waiting = false;
+					roundTimer.start();
+					roundDisplay = true;
+					newWin = 0;
+				} else if (inbetween) {
+					inbetween = false;
+					buttonTimer.start();
+					buttonHere = true;
+					button[randButton].setVisibility(1);
+				} else if (buttonHere) {
+					if (newWin == 1) {
+						winLoseTextView.setText(WIN);
+						winLoseTextView.setVisibility(1);
+						score += 1;
+						scoreTextView.setText(String.valueOf(score));
+						buttonHere = false;
+						roundNum += 1;
+						roundTimer.start();
+						waiting = true;
+					} else {
+						winLoseTextView.setText("Failed");
+						winLoseTextView.setVisibility(1);
+						roundTextView.setText(FINISHED);
+						roundTextView.setVisibility(1);
 					}
 				}
-			}*/
+			} else {
+				winLoseTextView.setText("Failed");
+				winLoseTextView.setVisibility(1);
+				roundTextView.setText(FINISHED);
+				roundTextView.setVisibility(1);
+			}
 		}
 		
 		//tick the timer down by 1 second
 		@Override
 		public void onTick(long millisUntilFinished) {
 			timerTextView.setText(String.valueOf(millisUntilFinished));
+			buttonHereTextView.setText(String.valueOf(buttonHere));
+			inbetweenTextView.setText(String.valueOf(inbetween));
+			roundDisplayTextView.setText(String.valueOf(roundDisplay));
+			waitingTextView.setText(String.valueOf(waiting));
+			newWinTextView.setText(String.valueOf(newWin));
 		}
+	}
+	public int randomTime() {
+		int rTime;
+		Random random = new Random();
+		rTime = random.nextInt(3000);
+		return rTime;
 	}
 	public int randomButton() {
 		int rButton;
