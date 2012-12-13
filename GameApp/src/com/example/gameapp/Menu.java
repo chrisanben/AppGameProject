@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 public class Menu extends Activity {
 
-	private TextView mainTitle;
 	private String passdiff;
 	private boolean passmus;
 	private MediaPlayer menuPlayer;
@@ -29,14 +28,10 @@ public class Menu extends Activity {
 		Button optionsButton = (Button) findViewById(R.id.optionsButton);
 		Button helpButton = (Button) findViewById(R.id.helpButton);
 		
-		mainTitle = (TextView) findViewById(R.id.textView1);
-		
 		startButton.setOnClickListener(menuButtonListener);
 		scoreButton.setOnClickListener(menuButtonListener);
 		optionsButton.setOnClickListener(menuButtonListener);
 		helpButton.setOnClickListener(menuButtonListener);
-		
-		mainTitle.setText("Critical Hit");
 	    
 		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
 	    menuPlayer.start();

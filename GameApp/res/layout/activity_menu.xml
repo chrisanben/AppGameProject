@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="5dp"
-        android:text="Critical Hit"
+        android:text="@string/critical_hit"
         android:textSize="30sp" />
 
     <ImageView
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="5dp"
-        android:text="Start" />
+        android:text="@string/start" />
 
     <Button
         android:id="@+id/scoreButton"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="5dp"
-        android:text="Score" />
+        android:text="@string/score" />
 
     <Button
         android:id="@+id/optionsButton"
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="5dp"
-        android:text="Options" />
+        android:text="@string/options" />
 
     <Button
         android:id="@+id/helpButton"
@@ -55,6 +55,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="5dp"
-        android:text="Help" />
+        android:text="@string/help" />
 
 </LinearLayout>

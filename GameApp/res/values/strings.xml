@@ -10,12 +10,26 @@
     <string name="options_menu_name">Options Menu</string>
     <string name="difficulty_options">Difficulty: </string>
     <string name="d_easy">Easy</string>
-    <string name="d_normal">Normal</string>
+    <string name="scoreis">Your Score is: </string>
     <string name="d_hard">Hard</string>
     <string name="op_on">ON</string>
     <string name="op_off">OFF</string>
     <string name="music_options">Music: </string>
     <string name="save_op">Save</string>
     <string name="title_activity_test_game">TestGame</string>
+    <string name="critical_hit">Critical Hit!</string>
+    <string name="start">Start</string>
+    <string name="options">Options</string>
+    <string name="score">Score</string>
+    <string name="help">Help</string>
+    <string name="round">Round</string>
+    <string name="win">You Win!!</string>
+    <string name="lose">You Lose!</string>
+    <string name="finished">Finished</string>
+    <string name="slow">Too Slow!</string>
+    <string name="soon">Too Soon!</string>
+    <string name="time">Time</string>
+    <string name="timesup">Times Up!</string>
+    <string name="d_normal">Normal</string>
 
 </resources>

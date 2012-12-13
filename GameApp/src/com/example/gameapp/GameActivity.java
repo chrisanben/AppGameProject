@@ -29,12 +29,6 @@ public class GameActivity extends Activity {
 	private final int N_BUTTON_INCREMENT = 100;
 	private final int H_BUTTON_INCREMENT = 150;
 	private final int MIN_BUTTON = 100;
-	private final String WIN = "You Win!!";
-	private final String LOSE = "You Lost!";
-	private final String ROUND = "Round ";
-	private final String FINISHED = "Finished ";
-	private final String TOO_SLOW_LOSE = "Too Slow!";
-	private final String TOO_SOON_LOSE = "Too Soon!";
 	
 	private MediaPlayer gameMusic;
 	private EditText input;
@@ -182,7 +176,7 @@ public class GameActivity extends Activity {
 					buttonTimer = new MyCountDownTimer(startTime, countBy);
 					button[randButton].setVisibility(-1);
 					winLoseTextView.setVisibility(-1);
-					roundTextView.setText(ROUND + String.valueOf(roundNum));
+					roundTextView.setText(getResources().getString(R.string.round) + " " + String.valueOf(roundNum));
 					roundTextView.setVisibility(1);
 					waiting = false;
 					roundTimer.start();
@@ -195,7 +189,7 @@ public class GameActivity extends Activity {
 					button[randButton].setVisibility(1);
 				} else if (buttonHere) {
 					if (newWin == 1) {
-						winLoseTextView.setText(WIN);
+						winLoseTextView.setText(getResources().getString(R.string.win));
 						winLoseTextView.setVisibility(1);
 						score += difficultyIncrement;
 						scoreTextView.setText(String.valueOf(score));
@@ -204,12 +198,12 @@ public class GameActivity extends Activity {
 						roundTimer.start();
 						waiting = true;
 					} else {
-						winLoseTextView.setText("Time's Up!");
+						winLoseTextView.setText(getResources().getString(R.string.timesup));
 						loseCondition();
 					}
 				}
 			} else {
-				winLoseTextView.setText(TOO_SOON_LOSE);
+				winLoseTextView.setText(getResources().getString(R.string.soon));
 				loseCondition();
 			}
 		}
@@ -242,13 +236,13 @@ public class GameActivity extends Activity {
 		input = new EditText(this);
 		button[randButton].setEnabled(false);
 		winLoseTextView.setVisibility(1);
-		roundTextView.setText(FINISHED);
+		roundTextView.setText(getResources().getString(R.string.finished));
 		roundTextView.setVisibility(1);
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		input.setSingleLine(true);
 		input.setHint("AAA");
-		builder.setTitle(LOSE);
-		builder.setMessage("Your score is: " + String.valueOf(score));
+		builder.setTitle(getResources().getString(R.string.lose));
+		builder.setMessage(getResources().getString(R.string.score) + " " + String.valueOf(score));
 		builder.setView(input);
 		builder.setCancelable(false);
 		builder.setPositiveButton("Back to Menu", new DialogInterface.OnClickListener() {
