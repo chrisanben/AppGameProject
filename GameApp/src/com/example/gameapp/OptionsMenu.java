@@ -14,17 +14,15 @@ public class OptionsMenu extends Activity {
 
 	private String difficulty;
 	private boolean musicState;
-	private final String f_on = "on";
-	private final String f_off = "off";
 	private TextView diff;
 	private TextView musica;
 	private MediaPlayer optionsMusic;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options_menu);
-		
+
 		diff = (TextView) findViewById(R.id.difficulty);
 		musica = (TextView) findViewById(R.id.music);
 		Button easy = (Button) findViewById(R.id.easy_button);
@@ -33,38 +31,38 @@ public class OptionsMenu extends Activity {
 		Button save = (Button) findViewById(R.id.save_button);
 		Button on = (Button) findViewById(R.id.on_button);
 		Button off = (Button) findViewById(R.id.off_button);
-		
+
 		save.setOnClickListener(optionsButtonListener);
 		easy.setOnClickListener(optionsButtonListener);
 		normal.setOnClickListener(optionsButtonListener);
 		hard.setOnClickListener(optionsButtonListener);
 		on.setOnClickListener(optionsButtonListener);
 		off.setOnClickListener(optionsButtonListener);
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			difficulty = extras.getString("difficulty");
 			musicState = extras.getBoolean("music");
 		}
-		
+
 		diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 		musica.setText(getResources().getString(R.string.music_options) + " " + musicState);
-		
+
 	}
-	
+
 	@Override
 	protected void onStart(){
 		super.onStart();
 		startMedia();
 	}
-	
+
 	@Override
 	protected void onStop(){
 		optionsMusic.release();
 		optionsMusic = null;
 		super.onStop();
 	}
-	
+
 	@Override
 	public void finish(){
 		Intent passData = new Intent(OptionsMenu.this, Menu.class);
@@ -73,7 +71,7 @@ public class OptionsMenu extends Activity {
 		setResult(RESULT_OK, passData);
 		super.finish();
 	}
-	
+
 	private OnClickListener optionsButtonListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -112,7 +110,7 @@ public class OptionsMenu extends Activity {
 			}
 		}
 	};
-	
+
 	public void changeMedia(){
 		if (musicState){
 			openMedia();
@@ -120,18 +118,18 @@ public class OptionsMenu extends Activity {
 			optionsMusic.pause();
 		}
 	}
-	
+
 	public void openMedia(){
 		optionsMusic = MediaPlayer.create(getApplicationContext(), R.raw.options_music);
 		optionsMusic.start();
 		optionsMusic.setLooping(true);
 	}
-	
+
 	public void closeMedia(){
 		optionsMusic.release();
 		optionsMusic = null;
 	}
-	
+
 	public void startMedia(){
 		if (musicState){
 			openMedia();

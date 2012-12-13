@@ -4,8 +4,8 @@
     <string name="app_name">GameApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_options_menu">OptionsMenu</string>
-    <string name="title_activity_game">GameActivity</string>
+    <string name="title_activity_options_menu">Options Menu</string>
+    <string name="title_activity_game">Critical Hit</string>
     <string name="title_activity_splash_screen">Splash Screen</string>
     <string name="options_menu_name">Options Menu</string>
     <string name="difficulty_options">Difficulty: </string>

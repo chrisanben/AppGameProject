@@ -144,10 +144,10 @@ public class Menu extends Activity {
 				passdiff = "Normal";
 				passmus = true;
 			}
-			Intent optionsIntent = new Intent(Menu.this, GameActivity.class);
-			optionsIntent.putExtra("difficulty", passdiff);
-			optionsIntent.putExtra("music", passmus);
-			startActivityForResult(optionsIntent, 102);
+			Intent gameIntent = new Intent(Menu.this, GameActivity.class);
+			gameIntent.putExtra("difficulty", passdiff);
+			gameIntent.putExtra("music", passmus);
+			startActivityForResult(gameIntent, 102);
 		}
 	};
 
