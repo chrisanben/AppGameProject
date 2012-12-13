@@ -2,6 +2,8 @@ package ca.joelmurphy.gameappjc;
 
 import java.util.Random;
 
+import ca.joelmurphy.gameappjc.SQLiteAdapter;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
@@ -13,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,8 +34,9 @@ public class GameActivity extends Activity {
 	private final String FINISHED = "Finished ";
 	private final String TOO_SLOW_LOSE = "Too Slow!";
 	private final String TOO_SOON_LOSE = "Too Soon!";
-	final Context context = this;
+	private final EditText input = new EditText(this);
 	
+	private Context context = this;
 	private long startTime;
 	private long randomTime;
 	private ImageButton[] button = new ImageButton[9];
@@ -59,6 +63,7 @@ public class GameActivity extends Activity {
 	private boolean buttonHere;
 	private boolean win;
 	private int newWin;
+	private SQLiteAdapter mySQLiteAdapter;
 	
 	
 	
@@ -277,8 +282,11 @@ public class GameActivity extends Activity {
 		roundTextView.setText(FINISHED);
 		roundTextView.setVisibility(1);
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		input.setSingleLine(true);
+		input.setHint("AAA");
 		builder.setTitle(LOSE);
 		builder.setMessage("Your score is: " + String.valueOf(score));
+		builder.setView(input);
 		builder.setCancelable(false);
 		builder.setPositiveButton("Back to Menu", backToMenu());
 		AlertDialog finishedDialog = builder.create();
@@ -286,6 +294,16 @@ public class GameActivity extends Activity {
 	}
 	
 	public android.content.DialogInterface.OnClickListener backToMenu() {
+		String enteredInitials;
+		if (input.getText().length() > 3) {
+			enteredInitials = input.getText().toString().substring(2);
+		} else {
+			enteredInitials = input.getText().toString();
+		}
+		mySQLiteAdapter = new SQLiteAdapter(context);
+        mySQLiteAdapter.openToWrite();
+        mySQLiteAdapter.scoreInsert(enteredInitials, score);
+        mySQLiteAdapter.close();
 		Intent menuIntent = new Intent(context, Menu.class);
 		startActivityForResult(menuIntent, 101);
 		return null;
