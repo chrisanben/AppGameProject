@@ -16,5 +16,6 @@
     <string name="op_off">OFF</string>
     <string name="music_options">Music: </string>
     <string name="save_op">Save</string>
+    <string name="title_activity_test_game">TestGame</string>
 
 </resources>

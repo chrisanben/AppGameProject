@@ -22,7 +22,7 @@ public class OptionsMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_options_menu);
-
+		
 		diff = (TextView) findViewById(R.id.difficulty);
 		musica = (TextView) findViewById(R.id.music);
 		Button easy = (Button) findViewById(R.id.easy_button);

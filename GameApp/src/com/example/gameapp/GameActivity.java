@@ -4,11 +4,13 @@ import java.util.Random;
 
 import com.example.gameapp.SQLiteAdapter;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -33,11 +35,13 @@ public class GameActivity extends Activity {
 	private final String FINISHED = "Finished ";
 	private final String TOO_SLOW_LOSE = "Too Slow!";
 	private final String TOO_SOON_LOSE = "Too Soon!";
-	private final EditText input = new EditText(this);
 	
+	private MediaPlayer gameMusic;
+	private EditText input;
 	private Context context = this;
 	private long startTime;
 	private long randomTime;
+	private int difficultyIncrement;
 	private ImageButton[] button = new ImageButton[9];
 	private int randButton;
 	private int score;
@@ -46,11 +50,6 @@ public class GameActivity extends Activity {
 	private TextView scoreTextView;
 	private TextView roundTextView;
 	private TextView winLoseTextView;
-	private TextView buttonHereTextView;
-	private TextView inbetweenTextView;
-	private TextView roundDisplayTextView;
-	private TextView waitingTextView;
-	private TextView newWinTextView;
 	private LinearLayout gameLayout;
 	private MyCountDownTimer roundTimer;
 	private MyCountDownTimer randomTimer;
@@ -59,11 +58,10 @@ public class GameActivity extends Activity {
 	private boolean inbetween;
 	private boolean waiting;
 	private boolean buttonHere;
-	private boolean win;
 	private int newWin;
-	private SQLiteAdapter mySQLiteAdapter;
 	private String difficulty;
 	private boolean musicState;
+	private SQLiteAdapter mySQLiteAdapter;
 	
 	
 	
@@ -72,6 +70,18 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_activity);
 		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			difficulty = extras.getString("difficulty");
+			musicState = extras.getBoolean("music");
+		}
+		if (difficulty == "Normal") {
+				difficultyIncrement = N_BUTTON_INCREMENT;
+		} else if (difficulty == "Hard") {
+			difficultyIncrement = H_BUTTON_INCREMENT;
+		} else {
+			difficultyIncrement = E_BUTTON_INCREMENT;
+		}
 		startTime = 2000;
 		newWin = 0;
 		score = 0;
@@ -81,12 +91,6 @@ public class GameActivity extends Activity {
 		buttonHere = false;
 		roundDisplay = true;
 		inbetween = false;
-		win = true;
-		newWinTextView = (TextView) findViewById(R.id.newWinTextView);
-		buttonHereTextView = (TextView) findViewById(R.id.buttonHereTextView);
-		inbetweenTextView = (TextView) findViewById(R.id.inbetweenTextView);
-		roundDisplayTextView = (TextView) findViewById(R.id.roundDisplayTextView);
-		waitingTextView = (TextView) findViewById(R.id.waitingTextView);
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
 		scoreTextView = (TextView) findViewById(R.id.scoreTextView);
 		roundTextView = (TextView) findViewById(R.id.roundTextView);
@@ -109,18 +113,10 @@ public class GameActivity extends Activity {
 		button[7] = (ImageButton) findViewById(R.id.button7);
 		button[8] = (ImageButton) findViewById(R.id.button8);
 		
-		
 		for (int i = 0; i < 9; i++) {
 			button[i].setOnTouchListener(buttonTouchListener);
 			button[i].setVisibility(-1);
 		}
-		
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			difficulty = extras.getString("difficulty");
-			musicState = extras.getBoolean("music");
-		} 
-		
 		
 		roundTimer.start();
 			
@@ -138,11 +134,6 @@ public class GameActivity extends Activity {
         			if (newWin == 0) {
         				newWin = 1;
         			}
-        			buttonHereTextView.setText(String.valueOf(buttonHere));
-        			inbetweenTextView.setText(String.valueOf(inbetween));
-        			roundDisplayTextView.setText(String.valueOf(roundDisplay));
-        			waitingTextView.setText(String.valueOf(waiting));
-        			newWinTextView.setText(String.valueOf(newWin));	
         			/*if (buttonHere) {
     				buttonTimer.cancel();
         			} else if (inbetween) {
@@ -159,39 +150,6 @@ public class GameActivity extends Activity {
         return false;
 	}
 	};
-	
-	/*private OnTouchListener buttonTouchListener() {
-		@Override
-	    public boolean onTouch(View v, MotionEvent event) {
-	        ImageView img = (ImageView) v;
-	        int action = event.getAction();
-	        if (action == MotionEvent.ACTION_DOWN){
-	            img.setImageResource(R.drawable.port);
-	        }else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL){
-	            img.setImageResource(R.drawable.bar);
-	        }               
-	        return false;
-	    }
-	}*/
-
-	/*OnClickListener buttonClickListener = new OnClickListener(){
-		
-		@Override
-		public void onClick(View v) {
-			if (v.getId() == R.id.gameLayout) {
-				scoreTextView.setText("LAYOUT");
-			} else {
-			String idString = String.valueOf(((ImageButton) v).getId());
-			scoreTextView.setText(idString);
-			for (int i = 0; i <= 8; i++) {
-				button[i].setVisibility(-1);
-			}
-			button[randomButton()].setVisibility(1);
-			
-			}
-			
-		}
-	};*/
 	
 	public class MyCountDownTimer extends CountDownTimer {
 		
@@ -215,8 +173,8 @@ public class GameActivity extends Activity {
 					randomTimer.start();
 					inbetween = true;
 				} else if (waiting) {
-					if (startTime - N_BUTTON_INCREMENT >= 100) {
-						startTime -=  N_BUTTON_INCREMENT;
+					if (startTime - difficultyIncrement >= 100) {
+						startTime -=  difficultyIncrement;
 					} else {
 						startTime = MIN_BUTTON;
 					}
@@ -239,7 +197,7 @@ public class GameActivity extends Activity {
 					if (newWin == 1) {
 						winLoseTextView.setText(WIN);
 						winLoseTextView.setVisibility(1);
-						score += 1;
+						score += difficultyIncrement;
 						scoreTextView.setText(String.valueOf(score));
 						buttonHere = false;
 						roundNum += 1;
@@ -260,11 +218,11 @@ public class GameActivity extends Activity {
 		@Override
 		public void onTick(long millisUntilFinished) {
 			timerTextView.setText(String.valueOf(millisUntilFinished));
-			buttonHereTextView.setText(String.valueOf(buttonHere));
-			inbetweenTextView.setText(String.valueOf(inbetween));
-			roundDisplayTextView.setText(String.valueOf(roundDisplay));
-			waitingTextView.setText(String.valueOf(waiting));
-			newWinTextView.setText(String.valueOf(newWin));
+			if (buttonHere) {
+				timerTextView.setVisibility(1);
+			} else {
+				timerTextView.setVisibility(-1);
+			}
 		}
 	}
 	public int randomTime() {
@@ -281,6 +239,7 @@ public class GameActivity extends Activity {
 	}
 	
 	public void loseCondition() {
+		input = new EditText(this);
 		button[randButton].setEnabled(false);
 		winLoseTextView.setVisibility(1);
 		roundTextView.setText(FINISHED);
@@ -292,26 +251,62 @@ public class GameActivity extends Activity {
 		builder.setMessage("Your score is: " + String.valueOf(score));
 		builder.setView(input);
 		builder.setCancelable(false);
-		builder.setPositiveButton("Back to Menu", backToMenu());
+		builder.setPositiveButton("Back to Menu", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id){
+				String enteredInitials;
+				if (input.getText().length() > 3) {
+					enteredInitials = input.getText().toString().substring(2);
+				} else {
+					enteredInitials = input.getText().toString();
+				}
+				mySQLiteAdapter = new SQLiteAdapter(context);
+		        mySQLiteAdapter.openToWrite();
+		        mySQLiteAdapter.scoreInsert(enteredInitials, score);
+		        mySQLiteAdapter.close();
+		        finish();
+			}
+		});
 		AlertDialog finishedDialog = builder.create();
 		finishedDialog.show();
+		
 	}
 	
-	public android.content.DialogInterface.OnClickListener backToMenu() {
-		String enteredInitials;
-		if (input.getText().length() > 3) {
-			enteredInitials = input.getText().toString().substring(2);
-		} else {
-			enteredInitials = input.getText().toString();
-		}
-		mySQLiteAdapter = new SQLiteAdapter(context);
-        mySQLiteAdapter.openToWrite();
-        mySQLiteAdapter.scoreInsert(enteredInitials, score);
-        mySQLiteAdapter.close();
-		Intent menuIntent = new Intent(context, Menu.class);
-		startActivityForResult(menuIntent, 101);
-		return null;
+	@Override
+	public void finish(){
+		Intent passData = new Intent(GameActivity.this, Menu.class);
+		passData.putExtra("difficulty", difficulty);
+		passData.putExtra("music", musicState);
+		setResult(RESULT_OK, passData);
+		super.finish();
+	}
+	
+	@Override
+	protected void onStart(){
+		super.onStart();
+		startMedia();
 	}
 
-}
+	@Override
+	protected void onStop(){
+		gameMusic.release();
+		gameMusic = null;
+		super.onStop();
+	}
+	
+	public void openMedia(){
+		gameMusic = MediaPlayer.create(getApplicationContext(), R.raw.game_music);
+		gameMusic.start();
+		gameMusic.setLooping(true);
+	}
 
+	public void closeMedia(){
+		gameMusic.release();
+		gameMusic = null;
+	}
+
+	public void startMedia(){
+		if (musicState){
+			openMedia();
+		} 
+	}
+}
