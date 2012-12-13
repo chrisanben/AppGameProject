@@ -69,12 +69,12 @@ public class GameActivity extends Activity {
 			difficulty = extras.getString("difficulty");
 			musicState = extras.getBoolean("music");
 		}
-		if (difficulty == "Normal") {
-				difficultyIncrement = N_BUTTON_INCREMENT;
-		} else if (difficulty == "Hard") {
+		if (difficulty.equals(getResources().getString(R.string.d_easy))) {
+			difficultyIncrement = E_BUTTON_INCREMENT;
+		} else if (difficulty.equals(getResources().getString(R.string.d_hard))) {
 			difficultyIncrement = H_BUTTON_INCREMENT;
 		} else {
-			difficultyIncrement = E_BUTTON_INCREMENT;
+			difficultyIncrement = N_BUTTON_INCREMENT;
 		}
 		startTime = 2000;
 		newWin = 0;

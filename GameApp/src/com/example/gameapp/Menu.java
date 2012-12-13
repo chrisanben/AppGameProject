@@ -93,7 +93,7 @@ public class Menu extends Activity {
 
 		private void optionsGame() {
 			if (passdiff == null) {
-				passdiff = "Normal";
+				passdiff = getResources().getString(R.string.d_normal);
 				passmus = true;
 			}
 			Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
@@ -136,13 +136,13 @@ public class Menu extends Activity {
 
 		private void startGame() {
 			if (passdiff == null) {
-				passdiff = "Normal";
+				passdiff = getResources().getString(R.string.d_normal);
 				passmus = true;
 			}
 			Intent gameIntent = new Intent(Menu.this, GameActivity.class);
 			gameIntent.putExtra("difficulty", passdiff);
 			gameIntent.putExtra("music", passmus);
-			startActivityForResult(gameIntent, 102);
+			startActivityForResult(gameIntent, 101);
 		}
 	};
 

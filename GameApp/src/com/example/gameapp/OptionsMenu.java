@@ -77,15 +77,15 @@ public class OptionsMenu extends Activity {
 		public void onClick(View v) {
 			switch(v.getId()){
 			case R.id.easy_button:
-				difficulty = "Easy";
+				difficulty = getResources().getString(R.string.d_easy);;
 				diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 				break;
 			case R.id.normal_button:
-				difficulty = "Normal";
+				difficulty = getResources().getString(R.string.d_normal);
 				diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 				break;
 			case R.id.hard_button:
-				difficulty = "Hard";
+				difficulty = getResources().getString(R.string.d_hard);
 				diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 				break;
 			case R.id.off_button:
