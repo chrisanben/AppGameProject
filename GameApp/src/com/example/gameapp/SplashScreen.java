@@ -14,7 +14,7 @@ public class SplashScreen extends Activity {
  
         Handler handler = new Handler();
  
-        // run a thread after 2 seconds to start the home screen
+        // run a thread after 3 seconds to start the home screen
         handler.postDelayed(new Runnable() {
  
             @Override
@@ -30,7 +30,7 @@ public class SplashScreen extends Activity {
  
             }
  
-        }, 2000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
+        }, 3000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
  
     }
  

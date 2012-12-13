@@ -25,11 +25,19 @@
         android:text="Normal" />
 
     <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/hard_button"
+        android:layout_marginBottom="17dp"
+        android:text="Save" />
+
+    <Button
         android:id="@+id/easy_button"
         android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/normal_button"
-        android:layout_alignBottom="@+id/normal_button"
+        android:layout_below="@+id/difficulty"
         android:layout_toLeftOf="@+id/normal_button"
         android:text="Easy" />
 
@@ -39,27 +47,49 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/test"
-        android:layout_marginRight="25dp"
-        android:layout_marginTop="91dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="84dp"
         android:text="Hard" />
 
     <TextView
         android:id="@+id/difficulty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/easy_button"
+        android:layout_above="@+id/normal_button"
         android:layout_alignLeft="@+id/easy_button"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="18dp"
         android:text="Difficulty: "
         android:textSize="20sp" />
 
     <Button
-        android:id="@+id/save_button"
+        android:id="@+id/on_button"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/off_button"
+        android:layout_alignBottom="@+id/off_button"
+        android:layout_alignLeft="@+id/music"
+        android:layout_marginLeft="19dp"
+        android:text="ON" />
+
+    <Button
+        android:id="@+id/off_button"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save_button"
+        android:layout_marginBottom="35dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/on_button"
+        android:text="OFF" />
+
+    <TextView
+        android:id="@+id/music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/hard_button"
-        android:layout_marginBottom="17dp"
-        android:text="Save" />
+        android:layout_above="@+id/on_button"
+        android:layout_alignLeft="@+id/difficulty"
+        android:layout_marginBottom="20dp"
+        android:text="Music: "
+        android:textSize="20sp" />
 
 </RelativeLayout>

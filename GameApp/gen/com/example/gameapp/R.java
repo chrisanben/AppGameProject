@@ -17,35 +17,38 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout2=0x7f080000;
-        public static final int button0=0x7f080010;
-        public static final int button1=0x7f080011;
-        public static final int button2=0x7f080012;
-        public static final int button3=0x7f080014;
-        public static final int button4=0x7f080015;
-        public static final int button5=0x7f080016;
-        public static final int button6=0x7f080018;
-        public static final int button7=0x7f080019;
-        public static final int button8=0x7f08001a;
-        public static final int buttonLayout=0x7f08000e;
-        public static final int difficulty=0x7f08000b;
-        public static final int easy_button=0x7f08000a;
-        public static final int gameLayout=0x7f08000d;
+        public static final int button0=0x7f080013;
+        public static final int button1=0x7f080014;
+        public static final int button2=0x7f080015;
+        public static final int button3=0x7f080017;
+        public static final int button4=0x7f080018;
+        public static final int button5=0x7f080019;
+        public static final int button6=0x7f08001b;
+        public static final int button7=0x7f08001c;
+        public static final int button8=0x7f08001d;
+        public static final int buttonLayout=0x7f080011;
+        public static final int difficulty=0x7f08000c;
+        public static final int easy_button=0x7f08000b;
+        public static final int gameLayout=0x7f080010;
         public static final int hard_button=0x7f080009;
         public static final int helpButton=0x7f080006;
         public static final int imageView1=0x7f080002;
-        public static final int menu_settings=0x7f08001d;
+        public static final int menu_settings=0x7f080020;
+        public static final int music=0x7f08000f;
         public static final int normal_button=0x7f080008;
+        public static final int off_button=0x7f08000e;
+        public static final int on_button=0x7f08000d;
         public static final int optionsButton=0x7f080005;
-        public static final int row1Layout=0x7f08000f;
-        public static final int row2Layout=0x7f080013;
-        public static final int row3Layout=0x7f080017;
-        public static final int save_button=0x7f08000c;
+        public static final int row1Layout=0x7f080012;
+        public static final int row2Layout=0x7f080016;
+        public static final int row3Layout=0x7f08001a;
+        public static final int save_button=0x7f08000a;
         public static final int scoreButton=0x7f080004;
-        public static final int scoreTextView=0x7f08001b;
+        public static final int scoreTextView=0x7f08001e;
         public static final int startButton=0x7f080003;
         public static final int test=0x7f080007;
         public static final int textView1=0x7f080001;
-        public static final int timerTextView=0x7f08001c;
+        public static final int timerTextView=0x7f08001f;
     }
     public static final class layout {
         public static final int activity_menu=0x7f030000;
@@ -60,7 +63,9 @@ public final class R {
         public static final int splash_screen=0x7f070003;
     }
     public static final class raw {
-        public static final int menu_music=0x7f040000;
+        public static final int game_music=0x7f040000;
+        public static final int menu_music=0x7f040001;
+        public static final int options_music=0x7f040002;
     }
     public static final class string {
         public static final int app_name=0x7f050000;

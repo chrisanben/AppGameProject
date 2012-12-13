@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,9 +13,10 @@ import android.widget.TextView;
 
 public class Menu extends Activity {
 
-	private boolean mIsBound = false;
 	private TextView mainTitle;
 	private String passdiff;
+	private String passmus;
+	private MediaPlayer menuPlayer;
 	final Context context = this;
 	
 	@Override
@@ -35,7 +37,19 @@ public class Menu extends Activity {
 		helpButton.setOnClickListener(menuButtonListener);
 		
 		mainTitle.setText("Critical Hit");
-		
+	    
+		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
+	    menuPlayer.start();
+	    menuPlayer.setLooping(true);
+	}
+	
+	@Override
+	protected void onStop(){
+		if(passmus == "on"){
+			menuPlayer.release();
+			menuPlayer = null;
+		}
+		super.onStop();
 	}
 	
 	@Override
@@ -43,7 +57,14 @@ public class Menu extends Activity {
 	  if (resultCode == RESULT_OK && requestCode == 101) {
 	    if (data.hasExtra("difficulty")) {
 	    	passdiff = data.getExtras().getString("difficulty");
-	    	mainTitle.setText(passdiff);
+	    }
+	    if (data.hasExtra("music")) {
+	    	passmus = data.getExtras().getString("music");
+	    	if (passmus == "on"){
+	    		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
+	    	    menuPlayer.start();
+	    	    menuPlayer.setLooping(true);
+	    	}
 	    }
 	  }
 	} 
@@ -53,18 +74,15 @@ public class Menu extends Activity {
 		public void onClick(View v) {
 			switch(v.getId()){
 			case R.id.startButton:
-				mainTitle.setText("Start");
 				startGame();
 				break;
 			case R.id.scoreButton:
-				mainTitle.setText("Score");
 				scoreGame();
 				break;
 			case R.id.optionsButton:
 				optionsGame();
 				break;
 			case R.id.helpButton:
-				mainTitle.setText("Help");
 				helpButton();
 				break;
 			default:
@@ -75,14 +93,25 @@ public class Menu extends Activity {
 		private void optionsGame() {
 			if (passdiff == null) {
 				passdiff = "Normal";
+				passmus = "on";
 			}
 			Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
 			optionsIntent.putExtra("difficulty", passdiff);
+			optionsIntent.putExtra("music", passmus);
 			startActivityForResult(optionsIntent, 101);
 		}
 
 		private void helpButton() {
-			// TODO Auto-generated method stub
+			AlertDialog.Builder helpbuilder = new AlertDialog.Builder(context);
+			helpbuilder.setTitle("How to Play!");
+			//builder.setMessage("Stuff");
+			helpbuilder.setMessage(String.format("%s",
+					("Press the button before the opponent does. However press it too soon and you'll lose! Each round gets more difficult!")));
+			helpbuilder.setCancelable(false);
+			helpbuilder.setPositiveButton("Ok", null);
+			
+			AlertDialog scoreDialog = helpbuilder.create();
+			scoreDialog.show();
 		}
 
 		private void scoreGame() {
@@ -107,9 +136,11 @@ public class Menu extends Activity {
 		private void startGame() {
 			if (passdiff == null) {
 				passdiff = "Normal";
+				passmus = "on";
 			}
 			Intent optionsIntent = new Intent(Menu.this, GameActivity.class);
 			optionsIntent.putExtra("difficulty", passdiff);
+			optionsIntent.putExtra("music", passmus);
 			startActivityForResult(optionsIntent, 102);
 		}
 	};
