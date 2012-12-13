@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="@string/hello_world"
+        android:text="@string/options_menu_name"
         android:textSize="30sp" />
 
     <Button
@@ -22,7 +22,7 @@
         android:layout_alignBaseline="@+id/hard_button"
         android:layout_alignBottom="@+id/hard_button"
         android:layout_toLeftOf="@+id/hard_button"
-        android:text="Normal" />
+        android:text="@string/d_normal" />
 
     <Button
         android:id="@+id/save_button"
@@ -31,7 +31,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/hard_button"
         android:layout_marginBottom="17dp"
-        android:text="Save" />
+        android:text="@string/save_op" />
 
     <Button
         android:id="@+id/easy_button"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/difficulty"
         android:layout_toLeftOf="@+id/normal_button"
-        android:text="Easy" />
+        android:text="@string/d_easy" />
 
     <Button
         android:id="@+id/hard_button"
@@ -49,7 +49,7 @@
         android:layout_below="@+id/test"
         android:layout_marginRight="24dp"
         android:layout_marginTop="84dp"
-        android:text="Hard" />
+        android:text="@string/d_hard" />
 
     <TextView
         android:id="@+id/difficulty"
@@ -59,7 +59,7 @@
         android:layout_alignLeft="@+id/easy_button"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="18dp"
-        android:text="Difficulty: "
+        android:text="@string/difficulty_options"
         android:textSize="20sp" />
 
     <Button
@@ -70,7 +70,7 @@
         android:layout_alignBottom="@+id/off_button"
         android:layout_alignLeft="@+id/music"
         android:layout_marginLeft="19dp"
-        android:text="ON" />
+        android:text="@string/op_on" />
 
     <Button
         android:id="@+id/off_button"
@@ -80,7 +80,7 @@
         android:layout_marginBottom="35dp"
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/on_button"
-        android:text="OFF" />
+        android:text="@string/op_off" />
 
     <TextView
         android:id="@+id/music"
@@ -89,7 +89,7 @@
         android:layout_above="@+id/on_button"
         android:layout_alignLeft="@+id/difficulty"
         android:layout_marginBottom="20dp"
-        android:text="Music: "
+        android:text="@string/music_options"
         android:textSize="20sp" />
 
 </RelativeLayout>

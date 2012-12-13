@@ -15,7 +15,7 @@ public class Menu extends Activity {
 
 	private TextView mainTitle;
 	private String passdiff;
-	private String passmus;
+	private boolean passmus;
 	private MediaPlayer menuPlayer;
 	final Context context = this;
 	
@@ -45,7 +45,7 @@ public class Menu extends Activity {
 	
 	@Override
 	protected void onStop(){
-		if(passmus == "on"){
+		if(passmus){
 			menuPlayer.release();
 			menuPlayer = null;
 		}
@@ -59,15 +59,21 @@ public class Menu extends Activity {
 	    	passdiff = data.getExtras().getString("difficulty");
 	    }
 	    if (data.hasExtra("music")) {
-	    	passmus = data.getExtras().getString("music");
-	    	if (passmus == "on"){
-	    		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
-	    	    menuPlayer.start();
-	    	    menuPlayer.setLooping(true);
-	    	}
+	    	passmus = data.getExtras().getBoolean("music");
+	    	checkMedia();
 	    }
 	  }
 	} 
+	
+	private void checkMedia(){
+    	if (passmus == true){
+    		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
+    	    menuPlayer.start();
+    	    menuPlayer.setLooping(true);
+    	} else {
+    		
+    	}
+	}
 
 	private OnClickListener menuButtonListener = new OnClickListener() {
 		@Override
@@ -93,7 +99,7 @@ public class Menu extends Activity {
 		private void optionsGame() {
 			if (passdiff == null) {
 				passdiff = "Normal";
-				passmus = "on";
+				passmus = true;
 			}
 			Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
 			optionsIntent.putExtra("difficulty", passdiff);
@@ -136,7 +142,7 @@ public class Menu extends Activity {
 		private void startGame() {
 			if (passdiff == null) {
 				passdiff = "Normal";
-				passmus = "on";
+				passmus = true;
 			}
 			Intent optionsIntent = new Intent(Menu.this, GameActivity.class);
 			optionsIntent.putExtra("difficulty", passdiff);

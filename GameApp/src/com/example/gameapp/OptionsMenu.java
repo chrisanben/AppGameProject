@@ -13,7 +13,9 @@ import android.widget.TextView;
 public class OptionsMenu extends Activity {
 
 	private String difficulty;
-	private String musicState;
+	private boolean musicState;
+	private final String f_on = "on";
+	private final String f_off = "off";
 	private TextView diff;
 	private TextView musica;
 	private MediaPlayer optionsMusic;
@@ -42,30 +44,24 @@ public class OptionsMenu extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			difficulty = extras.getString("difficulty");
-			musicState = extras.getString("music");
+			musicState = extras.getBoolean("music");
 		}
 		
-		diff.setText("Difficulty: " + difficulty);
-		musica.setText("Music: " + musicState);
+		diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
+		musica.setText(getResources().getString(R.string.music_options) + " " + musicState);
 		
 	}
 	
 	@Override
 	protected void onStart(){
 		super.onStart();
-		if(musicState != "off"){
-		optionsMusic = MediaPlayer.create(getApplicationContext(), R.raw.options_music);
-	    optionsMusic.start();
-	    optionsMusic.setLooping(true);
-		}
+		startMedia();
 	}
 	
 	@Override
 	protected void onStop(){
-		if(musicState != "off"){
 		optionsMusic.release();
 		optionsMusic = null;
-		}
 		super.onStop();
 	}
 	
@@ -75,10 +71,6 @@ public class OptionsMenu extends Activity {
 		passData.putExtra("difficulty", difficulty);
 		passData.putExtra("music", musicState);
 		setResult(RESULT_OK, passData);
-		if(musicState == "on"){
-		optionsMusic.release();
-		optionsMusic = null;
-		}
 		super.finish();
 	}
 	
@@ -88,31 +80,28 @@ public class OptionsMenu extends Activity {
 			switch(v.getId()){
 			case R.id.easy_button:
 				difficulty = "Easy";
-				diff.setText("Difficulty: " + difficulty);
+				diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 				break;
 			case R.id.normal_button:
 				difficulty = "Normal";
-				diff.setText("Difficulty: " + difficulty);
+				diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 				break;
 			case R.id.hard_button:
 				difficulty = "Hard";
-				diff.setText("Difficulty: " + difficulty);
+				diff.setText(getResources().getString(R.string.difficulty_options) + difficulty);
 				break;
 			case R.id.off_button:
-				if (musicState != "off"){
-				optionsMusic.release();
-				optionsMusic = null;
-				musicState = "off";
-				musica.setText("Music: " + musicState);
+				if (musicState == true){
+					musicState = false;
+					changeMedia();
+					musica.setText(getResources().getString(R.string.music_options) + " " + musicState);
 				}
 				break;
 			case R.id.on_button:
-				if (musicState != "on"){
-				optionsMusic = MediaPlayer.create(getApplicationContext(), R.raw.options_music);
-				optionsMusic.start();
-				optionsMusic.setLooping(true);				
-				musicState = "on";
-				musica.setText("Music: " + musicState);
+				if (musicState == false){
+					musicState = true;
+					changeMedia();
+					musica.setText(getResources().getString(R.string.music_options) + " " + musicState);
 				}
 				break;
 			case R.id.save_button:
@@ -123,5 +112,30 @@ public class OptionsMenu extends Activity {
 			}
 		}
 	};
+	
+	public void changeMedia(){
+		if (musicState){
+			openMedia();
+		} else {
+			optionsMusic.pause();
+		}
+	}
+	
+	public void openMedia(){
+		optionsMusic = MediaPlayer.create(getApplicationContext(), R.raw.options_music);
+		optionsMusic.start();
+		optionsMusic.setLooping(true);
+	}
+	
+	public void closeMedia(){
+		optionsMusic.release();
+		optionsMusic = null;
+	}
+	
+	public void startMedia(){
+		if (musicState){
+			openMedia();
+		} 
+	}
 
 }

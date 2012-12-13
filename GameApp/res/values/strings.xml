@@ -7,5 +7,14 @@
     <string name="title_activity_options_menu">OptionsMenu</string>
     <string name="title_activity_game">GameActivity</string>
     <string name="title_activity_splash_screen">Splash Screen</string>
+    <string name="options_menu_name">Options Menu</string>
+    <string name="difficulty_options">Difficulty: </string>
+    <string name="d_easy">Easy</string>
+    <string name="d_normal">Normal</string>
+    <string name="d_hard">Hard</string>
+    <string name="op_on">ON</string>
+    <string name="op_off">OFF</string>
+    <string name="music_options">Music: </string>
+    <string name="save_op">Save</string>
 
 </resources>
