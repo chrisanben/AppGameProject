@@ -287,6 +287,9 @@ public class GameActivity extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		input.setSingleLine(true);
 		input.setHint("AAA");
+		if (score < 0) {
+			score = 0;
+		}
 		builder.setTitle(getResources().getString(R.string.lose));
 		builder.setMessage(getResources().getString(R.string.score) + " "
 				+ String.valueOf(score));
@@ -296,17 +299,23 @@ public class GameActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						String enteredInitials;
+						if (input.getText().length() != 0) {
 						if (input.getText().length() > 3) {
 							enteredInitials = input.getText().toString()
-									.substring(2);
+									.substring(0, 3);
 						} else {
 							enteredInitials = input.getText().toString();
 						}
+						}else{
+							enteredInitials = "AAA";
+						}
+						
 						mySQLiteAdapter = new SQLiteAdapter(context);
 						mySQLiteAdapter.openToWrite();
 						mySQLiteAdapter.scoreInsert(enteredInitials, score);
 						mySQLiteAdapter.close();
 						finish();
+						
 					}
 				});
 		AlertDialog finishedDialog = builder.create();

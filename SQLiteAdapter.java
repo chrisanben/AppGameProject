@@ -1,6 +1,5 @@
-package ca.joelmurphy.gameappjc;
+package com.example.gameapp;
 
-import ca.joelmurphy.gameappjc.MyConstants;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -59,7 +58,7 @@ public class SQLiteAdapter {
 	public Cursor queueFiveScores(){
 		String[] columns = new String[]{MyConstants.COLUMN_KEY_ID, MyConstants.COLUMN_INITIALS, MyConstants.COLUMN_SCORE};
 		Cursor cursor = sqLiteDatabase.query(MyConstants.MYDATABASE_SCORES_TABLE, columns, 
-				null, null, null, null, MyConstants.COLUMN_SCORE, MyConstants.LIMIT_FIVE);
+				null, null, null, null, MyConstants.COLUMN_SCORE + MyConstants.DESC_ORDER, MyConstants.LIMIT_FIVE);
 		
 		return cursor;
 	}

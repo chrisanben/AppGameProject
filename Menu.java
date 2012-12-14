@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,47 +16,52 @@ import android.widget.TextView;
 
 public class Menu extends Activity {
 
-private final String NO_INITIALS = "---";
-private final int NO_SCORE = 0;
+final private SoundPool menuSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 
-private TextView mainTitle;
 private String passdiff;
-private String passmus;
+private boolean passmus;
+private boolean passsound;
 private MediaPlayer menuPlayer;
 private SQLiteAdapter mySQLiteAdapter;
+private String scoreString1;
+private String scoreString2;
 final Context context = this;
+
+private int buttonsound;
 
 @Override
 protected void onCreate(Bundle savedInstanceState) {
-super.onCreate(savedInstanceState);
-setContentView(R.layout.activity_menu);
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.activity_menu);
 
-Button startButton = (Button) findViewById(R.id.startButton);
-Button scoreButton = (Button) findViewById(R.id.scoreButton);
-Button optionsButton = (Button) findViewById(R.id.optionsButton);
-Button helpButton = (Button) findViewById(R.id.helpButton);
+	Button startButton = (Button) findViewById(R.id.startButton);
+	Button scoreButton = (Button) findViewById(R.id.scoreButton);
+	Button optionsButton = (Button) findViewById(R.id.optionsButton);
+	Button helpButton = (Button) findViewById(R.id.helpButton);
+	
+	scoreString1 = "Name\t\tMaximum Round \n \n";
+	scoreString2 = "";
+	startButton.setOnClickListener(menuButtonListener);
+	scoreButton.setOnClickListener(menuButtonListener);
+	optionsButton.setOnClickListener(menuButtonListener);
+	helpButton.setOnClickListener(menuButtonListener);
 
-mainTitle = (TextView) findViewById(R.id.textView1);
+	//buttonsound = menuSound.load(this, R.raw.menu_button, 1);
+	passsound = true;
 
-startButton.setOnClickListener(menuButtonListener);
-scoreButton.setOnClickListener(menuButtonListener);
-optionsButton.setOnClickListener(menuButtonListener);
-helpButton.setOnClickListener(menuButtonListener);
-
-mainTitle.setText("Critical Hit");
-
-menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
-menuPlayer.start();
-menuPlayer.setLooping(true);
+	menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
+	menuPlayer.start();
+	menuPlayer.setLooping(true);
 }
 
 @Override
 protected void onStop(){
-if(passmus == "on"){
-menuPlayer.release();
-menuPlayer = null;
-}
-super.onStop();
+	if(passmus){
+		menuPlayer.release();
+		menuPlayer = null;
+	}
+	menuSound.release();
+	super.onStop();
 }
 
 @Override
@@ -63,14 +71,22 @@ if (data.hasExtra("difficulty")) {
 passdiff = data.getExtras().getString("difficulty");
 }
 if (data.hasExtra("music")) {
-passmus = data.getExtras().getString("music");
-if (passmus == "on"){
-menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
-menuPlayer.start();
-menuPlayer.setLooping(true);
+passmus = data.getExtras().getBoolean("music");
+checkMedia();
+}
+if (data.hasExtra("sound")) {
+passsound = data.getExtras().getBoolean("sound");
 }
 }
 }
+
+private void checkMedia(){
+     if (passmus == true){
+     menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
+     menuPlayer.start();
+     menuPlayer.setLooping(true);
+     }
+    
 }
 
 private OnClickListener menuButtonListener = new OnClickListener() {
@@ -78,15 +94,19 @@ private OnClickListener menuButtonListener = new OnClickListener() {
 public void onClick(View v) {
 switch(v.getId()){
 case R.id.startButton:
+//if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 startGame();
 break;
 case R.id.scoreButton:
+//if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 scoreGame();
 break;
 case R.id.optionsButton:
+//if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 optionsGame();
 break;
 case R.id.helpButton:
+//if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 helpButton();
 break;
 default:
@@ -96,12 +116,14 @@ break;
 
 private void optionsGame() {
 if (passdiff == null) {
-passdiff = "Normal";
-passmus = "on";
+passdiff = getResources().getString(R.string.d_normal);
+passmus = true;
+passsound = true;
 }
 Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
 optionsIntent.putExtra("difficulty", passdiff);
 optionsIntent.putExtra("music", passmus);
+optionsIntent.putExtra("sound", passsound);
 startActivityForResult(optionsIntent, 101);
 }
 
@@ -118,44 +140,53 @@ AlertDialog scoreDialog = helpbuilder.create();
 scoreDialog.show();
 }
 
-	private void scoreGame() {
-		mySQLiteAdapter = new SQLiteAdapter(context);
-		mySQLiteAdapter.openToRead();
-		Cursor cursor = mySQLiteAdapter.queueFiveScores();
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle("Score");
-		if (cursor.getCount() == 0) {
-			builder.setMessage(NO_INITIALS, NO_SCORE);
-		} else {
+@SuppressWarnings("deprecation")
+private void scoreGame() {
+	mySQLiteAdapter = new SQLiteAdapter(context);
+	mySQLiteAdapter.openToRead();
+	Cursor cursor = mySQLiteAdapter.queueFiveScores();
+	AlertDialog.Builder builder = new AlertDialog.Builder(context);
+	builder.setTitle("High Scores");
+	if (cursor.getCount() != 0) {
 			startManagingCursor(cursor);
-			// create column info for cursor adapter
-	        String[] columns = new String[]{MyConstants.COLUMN_INITIALS, MyConstants.COLUMN_SCORE};
-	        int[] to = new int[]{R.id.shoppingListNameTextView};
-		//builder.setMessage("Stuff");
-		builder.setMessage(String.format("%s\n\n %s%d\n %s%d\n %s%d\n %s%d\n %s%d\n",
-		("Name\t\tMaximum Round"),
-		("AAA\t\t\t\t\t\t\t\t"), (50),
-		("BBB\t\t\t\t\t\t\t\t"), (40),
-		("CCC\t\t\t\t\t\t\t\t"), (30),
-		("DDD\t\t\t\t\t\t\t"), (20),
-		("EEE\t\t\t\t\t\t\t\t"), (10)));
-		builder.setCancelable(false);
-		builder.setPositiveButton("Ok", null);
+			String[] columns = new String[]{MyConstants.COLUMN_INITIALS, MyConstants.COLUMN_SCORE};
+			String[] result = new String[cursor.getCount()];
+			String[] result2 = new String[cursor.getCount()];
+             if(cursor.moveToFirst()){
+                  for (int i = 0; i < cursor.getCount(); i++){
+                      result[i] = cursor.getString(cursor.getColumnIndex(MyConstants.COLUMN_INITIALS));
+                      result2[i] = cursor.getString(cursor.getColumnIndex(MyConstants.COLUMN_SCORE));
+                      cursor.moveToNext();
+                    }//end of for
+             }
+             for (int i = 0; i < result.length; i++) {
+     			scoreString2 = scoreString2 + result[i] + "\t\t\t\t\t\t\t\t" + result2[i] + "\n";
+     		}
+			
+		}
+		scoreString1 = scoreString1 + scoreString2;
+			builder.setMessage(scoreString1);
+	builder.setCancelable(false);
+	builder.setPositiveButton("Ok", null);
 
-		AlertDialog scoreDialog = builder.create();
-		scoreDialog.show();
+	AlertDialog scoreDialog = builder.create();
+	scoreDialog.show();
+	scoreString1 = "Name\t\tMaximum Round \n \n";
+	scoreString2 = ""; 
 
-	}
+}
 
 private void startGame() {
 if (passdiff == null) {
-passdiff = "Normal";
-passmus = "on";
+passdiff = getResources().getString(R.string.d_normal);
+passmus = true;
+passsound = true;
 }
-Intent optionsIntent = new Intent(Menu.this, GameActivity.class);
-optionsIntent.putExtra("difficulty", passdiff);
-optionsIntent.putExtra("music", passmus);
-startActivityForResult(optionsIntent, 102);
+Intent gameIntent = new Intent(Menu.this, GameActivity.class);
+gameIntent.putExtra("difficulty", passdiff);
+gameIntent.putExtra("music", passmus);
+gameIntent.putExtra("sound", passsound);
+startActivityForResult(gameIntent, 101);
 }
 };
 
