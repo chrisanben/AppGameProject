@@ -73,8 +73,10 @@ public class OptionsMenu extends Activity {
 
 	@Override
 	protected void onStop(){
+		if (musicState){
 		optionsMusic.release();
 		optionsMusic = null;
+		}
 		optionSound.release();
 		super.onStop();
 	}

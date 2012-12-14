@@ -54,6 +54,7 @@ public class Menu extends Activity {
 			menuPlayer.release();
 			menuPlayer = null;
 		}
+		
 		menuSound.release();
 		super.onStop();
 	}

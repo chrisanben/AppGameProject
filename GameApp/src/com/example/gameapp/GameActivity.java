@@ -4,7 +4,9 @@ import java.util.Random;
 
 import com.example.gameapp.SQLiteAdapter;
 
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
@@ -12,6 +14,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,14 +25,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GameActivity extends Activity {
-	
+
 	private final long roundTime = 3000;
-	private final long countBy = 1000;
+	private final long countBy = 50;
+	private final int BUTTON_FIRST = 1;
 	private final int E_BUTTON_INCREMENT = 75;
 	private final int N_BUTTON_INCREMENT = 100;
 	private final int H_BUTTON_INCREMENT = 150;
 	private final int MIN_BUTTON = 100;
-	
+	private final SoundPool gameSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+
 	private MediaPlayer gameMusic;
 	private EditText input;
 	private Context context = this;
@@ -38,6 +43,7 @@ public class GameActivity extends Activity {
 	private int difficultyIncrement;
 	private ImageButton[] button = new ImageButton[9];
 	private int randButton;
+	private int randBadButton;
 	private int score;
 	private int roundNum;
 	private TextView timerTextView;
@@ -48,26 +54,30 @@ public class GameActivity extends Activity {
 	private MyCountDownTimer roundTimer;
 	private MyCountDownTimer randomTimer;
 	private MyCountDownTimer buttonTimer;
+	private MyCountDownTimer badButtonTimer;
 	private boolean roundDisplay;
 	private boolean inbetween;
 	private boolean waiting;
 	private boolean buttonHere;
+	private boolean badButtonHere;
 	private int newWin;
 	private String difficulty;
 	private boolean musicState;
 	private SQLiteAdapter mySQLiteAdapter;
-	
-	
-	
+	private int goodsound;
+	private int badsound;
+	private boolean soundState;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.game_activity);
-		
+
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			difficulty = extras.getString("difficulty");
 			musicState = extras.getBoolean("music");
+			soundState = extras.getBoolean("sound");
 		}
 		if (difficulty.equals(getResources().getString(R.string.d_easy))) {
 			difficultyIncrement = E_BUTTON_INCREMENT;
@@ -83,6 +93,7 @@ public class GameActivity extends Activity {
 		randomTime = 500 + randomTime();
 		waiting = false;
 		buttonHere = false;
+		badButtonHere = false;
 		roundDisplay = true;
 		inbetween = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
@@ -92,10 +103,14 @@ public class GameActivity extends Activity {
 		roundTimer = new MyCountDownTimer(roundTime, countBy);
 		randomTimer = new MyCountDownTimer(randomTime, countBy);
 		buttonTimer = new MyCountDownTimer(startTime, countBy);
-		
+		badButtonTimer = new MyCountDownTimer(startTime, countBy);
+
 		gameLayout = (LinearLayout) findViewById(R.id.gameLayout);
-		//gameLayout.setOnClickListener(buttonClickListener);
+		// gameLayout.setOnClickListener(buttonClickListener);
 		gameLayout.setOnTouchListener(buttonTouchListener);
+
+		goodsound = gameSound.load(this, R.raw.good_button, 1);
+		badsound = gameSound.load(this, R.raw.bad_button, 1);
 		
 		button[0] = (ImageButton) findViewById(R.id.button0);
 		button[1] = (ImageButton) findViewById(R.id.button1);
@@ -106,109 +121,127 @@ public class GameActivity extends Activity {
 		button[6] = (ImageButton) findViewById(R.id.button6);
 		button[7] = (ImageButton) findViewById(R.id.button7);
 		button[8] = (ImageButton) findViewById(R.id.button8);
-		
+
 		for (int i = 0; i < 9; i++) {
 			button[i].setOnTouchListener(buttonTouchListener);
 			button[i].setVisibility(-1);
 		}
-		
+
 		roundTimer.start();
-			
+
 	}
-	
-	OnTouchListener buttonTouchListener = new OnTouchListener(){
-		
-	
-	@Override
-    public boolean onTouch(View v, MotionEvent event) {
-		int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN){
-        	if ((!roundDisplay) && (!waiting)) {
-        		if (v.getId() == button[randButton].getId()) {
-        			if (newWin == 0) {
-        				newWin = 1;
-        			}
-        			/*if (buttonHere) {
-    				buttonTimer.cancel();
-        			} else if (inbetween) {
-    				randomTimer.cancel();
-        			}*/
-    			} else {
-    				newWin = -1;
-    				//win = false;
-    				//buttonTimer.cancel();
-    				//randomTimer.cancel();
-    			}
-        	}
-        }
-        return false;
-	}
+
+	OnTouchListener buttonTouchListener = new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			int action = event.getAction();
+			if (action == MotionEvent.ACTION_DOWN) {
+				if ((!roundDisplay) && (!waiting)) {
+					if (v.getId() == button[randButton].getId()) {
+						if (soundState) { gameSound.play(goodsound, 1.0f, 1.0f, 0, 0, 1.0f); }
+						if (newWin != -1) {
+							newWin = 1;
+							buttonsNotVisible();
+							winLoseTextView.setText(getResources().getString(
+									R.string.win));
+						}
+						/*
+						 * if (buttonHere) { buttonTimer.cancel(); } else if
+						 * (inbetween) { randomTimer.cancel(); }
+						 */
+					} else if (v.getId() == button[randBadButton].getId()) {
+						if (soundState) { gameSound.play(badsound, 1.0f, 1.0f, 0, 0, 1.0f); }
+							
+						if (newWin == 0) {
+							score -= 2*difficultyIncrement;
+							newWin = 5;
+						}
+						
+					} else {
+						if (newWin == 0) {
+							newWin = -1;
+							buttonsNotVisible();
+						}
+						// win = false;
+						// buttonTimer.cancel();
+						// randomTimer.cancel();
+					}
+				}
+			}
+			return false;
+		}
 	};
-	
+
 	public class MyCountDownTimer extends CountDownTimer {
-		
+
 		public MyCountDownTimer(long startTime, long countBy) {
 			super(startTime, countBy);
 		}
-		
-		//when the timer finishes and they haven't cleared all the cards
-		//tell them they lost and disable the buttons because the Alert Dialog doesn't work
+
+		// when the timer finishes and they haven't cleared all the cards
+		// tell them they lost and disable the buttons because the Alert Dialog
+		// doesn't work
 		@Override
 		public void onFinish() {
 			if (newWin != -1) {
 				if (roundDisplay) {
 					randButton = randomButton();
+					randBadButton = randomButton();
+					do {
+						randBadButton = randomButton();
+					}while(randBadButton == randButton);
 					randomTime = 500 + randomTime();
 					randomTimer = null;
 					randomTimer = new MyCountDownTimer(randomTime, countBy);
 					roundTextView.setVisibility(-1);
 					roundDisplay = false;
-					//winLoseTextView.setVisibility(-1);
+					// winLoseTextView.setVisibility(-1);
 					randomTimer.start();
 					inbetween = true;
 				} else if (waiting) {
 					if (startTime - difficultyIncrement >= 100) {
-						startTime -=  difficultyIncrement;
+						startTime -= difficultyIncrement;
 					} else {
 						startTime = MIN_BUTTON;
 					}
 					buttonTimer = null;
 					buttonTimer = new MyCountDownTimer(startTime, countBy);
-					button[randButton].setVisibility(-1);
+					buttonsNotVisible();
 					winLoseTextView.setVisibility(-1);
-					roundTextView.setText(getResources().getString(R.string.round) + " " + String.valueOf(roundNum));
+					roundTextView.setText(getResources().getString(
+							R.string.round)
+							+ " " + String.valueOf(roundNum));
 					roundTextView.setVisibility(1);
 					waiting = false;
 					roundTimer.start();
 					roundDisplay = true;
-					newWin = 0;
+					
 				} else if (inbetween) {
 					inbetween = false;
 					buttonTimer.start();
 					buttonHere = true;
-					button[randButton].setVisibility(1);
+					button[randButton].setImageDrawable(getResources().getDrawable(R.drawable.image_button));
+					button[randBadButton].setImageDrawable(getResources().getDrawable(R.drawable.bad_button));
+					buttonsVisible();
 				} else if (buttonHere) {
 					if (newWin == 1) {
-						winLoseTextView.setText(getResources().getString(R.string.win));
-						winLoseTextView.setVisibility(1);
 						score += difficultyIncrement;
-						scoreTextView.setText(String.valueOf(score));
-						buttonHere = false;
-						roundNum += 1;
-						roundTimer.start();
-						waiting = true;
+						endOfButtonTimer();
 					} else {
-						winLoseTextView.setText(getResources().getString(R.string.timesup));
+						winLoseTextView.setText(getResources().getString(
+								R.string.timesup));
 						loseCondition();
 					}
 				}
 			} else {
-				winLoseTextView.setText(getResources().getString(R.string.soon));
+				winLoseTextView
+						.setText(getResources().getString(R.string.lose));
 				loseCondition();
 			}
 		}
-		
-		//tick the timer down by 1 second
+
+		// tick the timer down by 1 second
 		@Override
 		public void onTick(long millisUntilFinished) {
 			timerTextView.setText(String.valueOf(millisUntilFinished));
@@ -219,12 +252,27 @@ public class GameActivity extends Activity {
 			}
 		}
 	}
+	
+	public void endOfButtonTimer() {
+		winLoseTextView.setVisibility(1);
+		if (score < 0) {
+			score = 0;
+		}
+		scoreTextView.setText(String.valueOf(score));
+		buttonHere = false;
+		roundNum += 1;
+		newWin = 0;
+		roundTimer.start();
+		waiting = true;
+	}
+	
 	public int randomTime() {
 		int rTime;
 		Random random = new Random();
 		rTime = random.nextInt(2000);
 		return rTime;
 	}
+
 	public int randomButton() {
 		int rButton;
 		Random random = new Random();
@@ -232,7 +280,18 @@ public class GameActivity extends Activity {
 		return rButton;
 	}
 	
+	public void buttonsNotVisible(){
+		button[randBadButton].setVisibility(-1);
+		button[randButton].setVisibility(-1);
+	}
+	
+	public void buttonsVisible(){
+		button[randBadButton].setVisibility(1);
+		button[randButton].setVisibility(1);
+	}
+
 	public void loseCondition() {
+		buttonsNotVisible();
 		input = new EditText(this);
 		button[randButton].setEnabled(false);
 		winLoseTextView.setVisibility(1);
@@ -242,65 +301,66 @@ public class GameActivity extends Activity {
 		input.setSingleLine(true);
 		input.setHint("AAA");
 		builder.setTitle(getResources().getString(R.string.lose));
-		builder.setMessage(getResources().getString(R.string.score) + " " + String.valueOf(score));
+		builder.setMessage(getResources().getString(R.string.score) + " "
+				+ String.valueOf(score));
 		builder.setView(input);
 		builder.setCancelable(false);
-		builder.setPositiveButton("Back to Menu", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id){
-				String enteredInitials;
-				if (input.getText().length() > 3) {
-					enteredInitials = input.getText().toString().substring(2);
-				} else {
-					enteredInitials = input.getText().toString();
-				}
-				mySQLiteAdapter = new SQLiteAdapter(context);
-		        mySQLiteAdapter.openToWrite();
-		        mySQLiteAdapter.scoreInsert(enteredInitials, score);
-		        mySQLiteAdapter.close();
-		        finish();
-			}
-		});
+		builder.setPositiveButton("Back to Menu",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						String enteredInitials;
+						if (input.getText().length() > 3) {
+							enteredInitials = input.getText().toString()
+									.substring(2);
+						} else {
+							enteredInitials = input.getText().toString();
+						}
+						mySQLiteAdapter = new SQLiteAdapter(context);
+						mySQLiteAdapter.openToWrite();
+						mySQLiteAdapter.scoreInsert(enteredInitials, score);
+						mySQLiteAdapter.close();
+						finish();
+					}
+				});
 		AlertDialog finishedDialog = builder.create();
 		finishedDialog.show();
-		
+
 	}
-	
+
 	@Override
-	public void finish(){
+	public void finish() {
 		Intent passData = new Intent(GameActivity.this, Menu.class);
 		passData.putExtra("difficulty", difficulty);
 		passData.putExtra("music", musicState);
 		setResult(RESULT_OK, passData);
 		super.finish();
 	}
-	
+
 	@Override
-	protected void onStart(){
+	protected void onStart() {
 		super.onStart();
 		startMedia();
 	}
 
 	@Override
-	protected void onStop(){
-		gameMusic.release();
-		gameMusic = null;
+	protected void onStop() {
+		if(musicState){
+			gameMusic.release();
+			gameMusic = null;
+		}
 		super.onStop();
 	}
-	
-	public void openMedia(){
-		gameMusic = MediaPlayer.create(getApplicationContext(), R.raw.game_music);
+
+	public void openMedia() {
+		gameMusic = MediaPlayer.create(getApplicationContext(),
+				R.raw.game_music);
 		gameMusic.start();
 		gameMusic.setLooping(true);
 	}
 
-	public void closeMedia(){
-		gameMusic.release();
-		gameMusic = null;
-	}
-
-	public void startMedia(){
-		if (musicState){
+	public void startMedia() {
+		if (musicState) {
 			openMedia();
-		} 
+		}
 	}
 }
