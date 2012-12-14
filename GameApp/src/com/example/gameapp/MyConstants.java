@@ -8,4 +8,5 @@ public class MyConstants {
 	public static final String COLUMN_SCORE = "Score";
 	public static final int MYDATABASE_VERSION = 1;
 	public static final String LIMIT_FIVE = "5";
+	public static final String DESC_ORDER = " DESC";
 }

@@ -4,9 +4,7 @@ import java.util.Random;
 
 import com.example.gameapp.SQLiteAdapter;
 
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.app.Activity;
@@ -33,7 +31,6 @@ public class GameActivity extends Activity {
 	private final int N_BUTTON_INCREMENT = 100;
 	private final int H_BUTTON_INCREMENT = 150;
 	private final int MIN_BUTTON = 100;
-	private final SoundPool gameSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
 
 	private MediaPlayer gameMusic;
 	private EditText input;
@@ -64,9 +61,6 @@ public class GameActivity extends Activity {
 	private String difficulty;
 	private boolean musicState;
 	private SQLiteAdapter mySQLiteAdapter;
-	private int goodsound;
-	private int badsound;
-	private boolean soundState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +71,6 @@ public class GameActivity extends Activity {
 		if (extras != null) {
 			difficulty = extras.getString("difficulty");
 			musicState = extras.getBoolean("music");
-			soundState = extras.getBoolean("sound");
 		}
 		if (difficulty.equals(getResources().getString(R.string.d_easy))) {
 			difficultyIncrement = E_BUTTON_INCREMENT;
@@ -109,9 +102,6 @@ public class GameActivity extends Activity {
 		// gameLayout.setOnClickListener(buttonClickListener);
 		gameLayout.setOnTouchListener(buttonTouchListener);
 
-		goodsound = gameSound.load(this, R.raw.good_button, 1);
-		badsound = gameSound.load(this, R.raw.bad_button, 1);
-		
 		button[0] = (ImageButton) findViewById(R.id.button0);
 		button[1] = (ImageButton) findViewById(R.id.button1);
 		button[2] = (ImageButton) findViewById(R.id.button2);
@@ -139,7 +129,6 @@ public class GameActivity extends Activity {
 			if (action == MotionEvent.ACTION_DOWN) {
 				if ((!roundDisplay) && (!waiting)) {
 					if (v.getId() == button[randButton].getId()) {
-						if (soundState) { gameSound.play(goodsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 						if (newWin != -1) {
 							newWin = 1;
 							buttonsNotVisible();
@@ -151,8 +140,6 @@ public class GameActivity extends Activity {
 						 * (inbetween) { randomTimer.cancel(); }
 						 */
 					} else if (v.getId() == button[randBadButton].getId()) {
-						if (soundState) { gameSound.play(badsound, 1.0f, 1.0f, 0, 0, 1.0f); }
-							
 						if (newWin == 0) {
 							score -= 2*difficultyIncrement;
 							newWin = 5;
@@ -300,6 +287,9 @@ public class GameActivity extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		input.setSingleLine(true);
 		input.setHint("AAA");
+		if (score < 0) {
+			score = 0;
+		}
 		builder.setTitle(getResources().getString(R.string.lose));
 		builder.setMessage(getResources().getString(R.string.score) + " "
 				+ String.valueOf(score));
@@ -309,17 +299,23 @@ public class GameActivity extends Activity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						String enteredInitials;
+						if (input.getText().length() != 0) {
 						if (input.getText().length() > 3) {
 							enteredInitials = input.getText().toString()
-									.substring(2);
+									.substring(0, 3);
 						} else {
 							enteredInitials = input.getText().toString();
 						}
+						}else{
+							enteredInitials = "AAA";
+						}
+						
 						mySQLiteAdapter = new SQLiteAdapter(context);
 						mySQLiteAdapter.openToWrite();
 						mySQLiteAdapter.scoreInsert(enteredInitials, score);
 						mySQLiteAdapter.close();
 						finish();
+						
 					}
 				});
 		AlertDialog finishedDialog = builder.create();
@@ -344,10 +340,8 @@ public class GameActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		if(musicState){
-			gameMusic.release();
-			gameMusic = null;
-		}
+		gameMusic.release();
+		gameMusic = null;
 		super.onStop();
 	}
 
@@ -356,6 +350,11 @@ public class GameActivity extends Activity {
 				R.raw.game_music);
 		gameMusic.start();
 		gameMusic.setLooping(true);
+	}
+
+	public void closeMedia() {
+		gameMusic.release();
+		gameMusic = null;
 	}
 
 	public void startMedia() {
