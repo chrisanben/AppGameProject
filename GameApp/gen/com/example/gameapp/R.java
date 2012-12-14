@@ -16,14 +16,18 @@ public final class R {
         public static final int five_padding=0x7f050002;
     }
     public static final class drawable {
-        public static final int betaback=0x7f020000;
-        public static final int betaback_game=0x7f020001;
-        public static final int betasplash=0x7f020002;
-        public static final int button=0x7f020003;
-        public static final int button_pressed=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int image_button=0x7f020006;
-        public static final int menu_logo=0x7f020007;
+        public static final int bad_button=0x7f020000;
+        public static final int bad_button_pressed=0x7f020001;
+        public static final int betaback=0x7f020002;
+        public static final int betaback_game=0x7f020003;
+        public static final int betasplash=0x7f020004;
+        public static final int button=0x7f020005;
+        public static final int button_pressed=0x7f020006;
+        public static final int gold_button=0x7f020007;
+        public static final int gold_button_pressed=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int image_button=0x7f02000a;
+        public static final int menu_logo=0x7f02000b;
     }
     public static final class id {
         public static final int LinearLayout2=0x7f090000;
@@ -77,9 +81,13 @@ public final class R {
         public static final int splash_screen=0x7f080004;
     }
     public static final class raw {
-        public static final int game_music=0x7f040000;
-        public static final int menu_music=0x7f040001;
-        public static final int options_music=0x7f040002;
+        public static final int bad_button=0x7f040000;
+        public static final int game_music=0x7f040001;
+        public static final int good_button=0x7f040002;
+        public static final int great_button=0x7f040003;
+        public static final int menu_button=0x7f040004;
+        public static final int menu_music=0x7f040005;
+        public static final int options_music=0x7f040006;
     }
     public static final class string {
         public static final int app_name=0x7f060000;
