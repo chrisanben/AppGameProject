@@ -31,5 +31,6 @@
     <string name="time">Time</string>
     <string name="timesup">Times Up!</string>
     <string name="d_normal">Normal</string>
+    <string name="sound_effects">Sound Effects: </string>
 
 </resources>

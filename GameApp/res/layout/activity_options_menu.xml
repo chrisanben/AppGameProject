@@ -5,16 +5,6 @@
     android:background="@drawable/betaback"
     tools:context=".OptionsMenu" >
 
-    <TextView
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="@string/options_menu_name"
-        android:textSize="30sp" />
-
     <Button
         android:id="@+id/normal_button"
         android:layout_width="90dp"
@@ -25,31 +15,12 @@
         android:text="@string/d_normal" />
 
     <Button
-        android:id="@+id/save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/hard_button"
-        android:layout_marginBottom="17dp"
-        android:text="@string/save_op" />
-
-    <Button
         android:id="@+id/easy_button"
         android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/difficulty"
         android:layout_toLeftOf="@+id/normal_button"
         android:text="@string/d_easy" />
-
-    <Button
-        android:id="@+id/hard_button"
-        android:layout_width="90dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/test"
-        android:layout_marginRight="24dp"
-        android:layout_marginTop="84dp"
-        android:text="@string/d_hard" />
 
     <TextView
         android:id="@+id/difficulty"
@@ -72,24 +43,78 @@
         android:layout_marginLeft="19dp"
         android:text="@string/op_on" />
 
-    <Button
-        android:id="@+id/off_button"
-        android:layout_width="90dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/save_button"
-        android:layout_marginBottom="35dp"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/on_button"
-        android:text="@string/op_off" />
-
     <TextView
         android:id="@+id/music"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/on_button"
         android:layout_alignLeft="@+id/difficulty"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="14dp"
         android:text="@string/music_options"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/sound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/music"
+        android:layout_below="@+id/on_button"
+        android:layout_marginTop="14dp"
+        android:text="@string/sound_effects"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/hard_button"
+        android:text="@string/save_op" />
+
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="@string/options_menu_name"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/off_button"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save_button"
+        android:layout_alignRight="@+id/test"
+        android:layout_marginBottom="102dp"
+        android:text="@string/op_off" />
+
+    <Button
+        android:id="@+id/hard_button"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/music"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="17dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/d_hard" />
+
+    <Button
+        android:id="@+id/sound_off"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/off_button"
+        android:layout_below="@+id/sound"
+        android:text="@string/op_off" />
+
+    <Button
+        android:id="@+id/sound_on"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/sound_off"
+        android:layout_alignBottom="@+id/sound_off"
+        android:layout_alignLeft="@+id/on_button"
+        android:text="@string/op_on" />
 
 </RelativeLayout>

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,11 +14,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class Menu extends Activity {
-
+	
+	final private SoundPool menuSound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+	
 	private String passdiff;
 	private boolean passmus;
+	private boolean passsound;
 	private MediaPlayer menuPlayer;
 	final Context context = this;
+
+	private int buttonsound;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,9 @@ public class Menu extends Activity {
 		scoreButton.setOnClickListener(menuButtonListener);
 		optionsButton.setOnClickListener(menuButtonListener);
 		helpButton.setOnClickListener(menuButtonListener);
+		
+		buttonsound = menuSound.load(this, R.raw.menu_button, 1);
+		passsound = true;
 	    
 		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
 	    menuPlayer.start();
@@ -44,6 +54,7 @@ public class Menu extends Activity {
 			menuPlayer.release();
 			menuPlayer = null;
 		}
+		menuSound.release();
 		super.onStop();
 	}
 	
@@ -57,6 +68,9 @@ public class Menu extends Activity {
 	    	passmus = data.getExtras().getBoolean("music");
 	    	checkMedia();
 	    }
+	    if (data.hasExtra("sound")) {
+	    	passsound = data.getExtras().getBoolean("sound");
+	    }
 	  }
 	} 
 	
@@ -65,9 +79,8 @@ public class Menu extends Activity {
     		menuPlayer = MediaPlayer.create(getApplicationContext(), R.raw.menu_music);
     	    menuPlayer.start();
     	    menuPlayer.setLooping(true);
-    	} else {
-    		
-    	}
+    	} 
+    	
 	}
 
 	private OnClickListener menuButtonListener = new OnClickListener() {
@@ -75,15 +88,19 @@ public class Menu extends Activity {
 		public void onClick(View v) {
 			switch(v.getId()){
 			case R.id.startButton:
+				if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 				startGame();
 				break;
 			case R.id.scoreButton:
+				if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 				scoreGame();
 				break;
 			case R.id.optionsButton:
+				if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 				optionsGame();
 				break;
 			case R.id.helpButton:
+				if (passsound){ menuSound.play(buttonsound, 1.0f, 1.0f, 0, 0, 1.0f); }
 				helpButton();
 				break;
 			default:
@@ -95,10 +112,12 @@ public class Menu extends Activity {
 			if (passdiff == null) {
 				passdiff = getResources().getString(R.string.d_normal);
 				passmus = true;
+				passsound = true;
 			}
 			Intent optionsIntent = new Intent(Menu.this, OptionsMenu.class);
 			optionsIntent.putExtra("difficulty", passdiff);
 			optionsIntent.putExtra("music", passmus);
+			optionsIntent.putExtra("sound", passsound);
 			startActivityForResult(optionsIntent, 101);
 		}
 
@@ -138,10 +157,12 @@ public class Menu extends Activity {
 			if (passdiff == null) {
 				passdiff = getResources().getString(R.string.d_normal);
 				passmus = true;
+				passsound = true;
 			}
 			Intent gameIntent = new Intent(Menu.this, GameActivity.class);
 			gameIntent.putExtra("difficulty", passdiff);
 			gameIntent.putExtra("music", passmus);
+			gameIntent.putExtra("sound", passsound);
 			startActivityForResult(gameIntent, 101);
 		}
 	};
