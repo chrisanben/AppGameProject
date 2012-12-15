@@ -1,5 +1,6 @@
 package com.example.gameapp;
-
+//Names: Joel Murphy & Chris Bentley
+//Purpose: Constants needed for database working
 public class MyConstants {
 	public static final String MYDATABASE_NAME = "High Scores";
 	public static final String MYDATABASE_SCORES_TABLE = "Scores";

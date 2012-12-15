@@ -1,5 +1,8 @@
 package com.example.gameapp;
 
+//Names: Joel Murphy & Chris Bentley
+//Purpose: Accessing the database and a scores table for the game.
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SQLiteAdapter {
 	
-
-	//create table MY_DATABASE (ID integer primary key, Content text not null);
+	//string to create the scores table
 	private static final String SCRIPT_CREATE_SCORES_DATABASE =
 		"CREATE TABLE IF NOT EXISTS " + MyConstants.MYDATABASE_SCORES_TABLE + " ("
 		+ MyConstants.COLUMN_KEY_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
@@ -27,23 +29,26 @@ public class SQLiteAdapter {
 		context = c;
 	}
 	
+	//open the database to read
 	public SQLiteAdapter openToRead() throws android.database.SQLException {
 		sqLiteHelper = new SQLiteHelper(context, MyConstants.MYDATABASE_NAME, null, MyConstants.MYDATABASE_VERSION);
 		sqLiteDatabase = sqLiteHelper.getReadableDatabase();
 		return this;	
 	}
 	
+	//open the database to write
 	public SQLiteAdapter openToWrite() throws android.database.SQLException {
 		sqLiteHelper = new SQLiteHelper(context, MyConstants.MYDATABASE_NAME, null, MyConstants.MYDATABASE_VERSION);
 		sqLiteDatabase = sqLiteHelper.getWritableDatabase();
 		return this;	
 	}
 	
+	//close the database
 	public void close(){
 		sqLiteHelper.close();
 	}	
 	
-	
+	//insert score into table
 	public long scoreInsert(String initials, int score){
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(MyConstants.COLUMN_INITIALS, initials);
@@ -51,10 +56,12 @@ public class SQLiteAdapter {
 		return sqLiteDatabase.insert(MyConstants.MYDATABASE_SCORES_TABLE, null, contentValues);
 	}
 	
+	//delete all records for future reset scores button
 	public int deleteAll(){
 		return sqLiteDatabase.delete(MyConstants.MYDATABASE_SCORES_TABLE, null, null);
 	}
 	
+	//select the top five scores for display
 	public Cursor queueFiveScores(){
 		String[] columns = new String[]{MyConstants.COLUMN_KEY_ID, MyConstants.COLUMN_INITIALS, MyConstants.COLUMN_SCORE};
 		Cursor cursor = sqLiteDatabase.query(MyConstants.MYDATABASE_SCORES_TABLE, columns, 
@@ -62,19 +69,6 @@ public class SQLiteAdapter {
 		
 		return cursor;
 	}
-	
-	 /*// get a Cursor containing all information about the list specified
-	   // by the given id
-	   public Cursor getOneSList(long id) 
-	   {
-		   String[] columns = new String[]{MyConstants.COLUMN_NAME_LIST};
-		   String[] columns2 = new String[]{MyConstants.COLUMN_KEY_ID, MyConstants.COLUMN_NAME_ITEM_NAME, MyConstants.COLUMN_NAME_QUANTITY};
-		   String tableName;
-	     tableName = (sqLiteDatabase.query(MyConstants.MYDATABASE_SLISTS_TABLE, columns, 
-	    		  "_id=" + id, null, null, null, null)).toString();
-	     return sqLiteDatabase.query(
-	             tableName, columns2, null, null, null, null, null);
-	   } // end method getOnContact*/
 	
 	public class SQLiteHelper extends SQLiteOpenHelper {
 
