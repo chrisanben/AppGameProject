@@ -128,6 +128,9 @@ public class GameActivity extends Activity {
 			button[i].setOnTouchListener(buttonTouchListener);
 			button[i].setVisibility(TOUCH_LOSE_INVISIBLE);
 		}
+		roundTextView.setText(getResources().getString(
+				R.string.round)
+				+ " " + String.valueOf(roundNum));
 		//start the round timer
 		roundTimer.start();
 
