@@ -33,5 +33,9 @@
     <string name="d_normal">Normal</string>
     <string name="sound_effects">Sound Effects: </string>
     <string name="default_initials">AAA</string>
+    <string name="description">When the buttons show up press the one with the sword! \nIf you click the one with the skull you will lose points. \nIf you click anywhere else, or fail to click the right button your game will end.</string>
+    <string name="how_to_play">How to Play!</string>
+    <string name="high_scores">High Scores</string>
+    <string name="score_string1">Name\t\t\t\t\t\t\tScore \n \n</string>
 
 </resources>
