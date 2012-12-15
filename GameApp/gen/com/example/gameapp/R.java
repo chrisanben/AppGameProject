@@ -18,16 +18,17 @@ public final class R {
     public static final class drawable {
         public static final int bad_button=0x7f020000;
         public static final int bad_button_pressed=0x7f020001;
-        public static final int betaback=0x7f020002;
-        public static final int betaback_game=0x7f020003;
-        public static final int betasplash=0x7f020004;
-        public static final int button=0x7f020005;
-        public static final int button_pressed=0x7f020006;
-        public static final int gold_button=0x7f020007;
-        public static final int gold_button_pressed=0x7f020008;
-        public static final int ic_launcher=0x7f020009;
-        public static final int image_button=0x7f02000a;
-        public static final int menu_logo=0x7f02000b;
+        public static final int bad_button_selector=0x7f020002;
+        public static final int betaback=0x7f020003;
+        public static final int betaback_game=0x7f020004;
+        public static final int betasplash=0x7f020005;
+        public static final int button=0x7f020006;
+        public static final int button_pressed=0x7f020007;
+        public static final int gold_button=0x7f020008;
+        public static final int gold_button_pressed=0x7f020009;
+        public static final int ic_launcher=0x7f02000a;
+        public static final int image_button=0x7f02000b;
+        public static final int menu_logo=0x7f02000c;
     }
     public static final class id {
         public static final int LinearLayout2=0x7f090000;
@@ -98,10 +99,14 @@ public final class R {
         public static final int d_easy=0x7f060008;
         public static final int d_hard=0x7f06000a;
         public static final int d_normal=0x7f06001d;
+        public static final int default_initials=0x7f06001f;
+        public static final int description=0x7f060020;
         public static final int difficulty_options=0x7f060007;
         public static final int finished=0x7f060018;
         public static final int hello_world=0x7f060001;
         public static final int help=0x7f060014;
+        public static final int high_scores=0x7f060022;
+        public static final int how_to_play=0x7f060021;
         public static final int lose=0x7f060017;
         public static final int menu_settings=0x7f060002;
         public static final int music_options=0x7f06000d;
@@ -112,6 +117,7 @@ public final class R {
         public static final int round=0x7f060015;
         public static final int save_op=0x7f06000e;
         public static final int score=0x7f060013;
+        public static final int score_string1=0x7f060023;
         public static final int scoreis=0x7f060009;
         public static final int slow=0x7f060019;
         public static final int soon=0x7f06001a;

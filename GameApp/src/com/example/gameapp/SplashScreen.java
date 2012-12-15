@@ -9,9 +9,9 @@ public class SplashScreen extends Activity {
  
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
- 
         setContentView(R.layout.splash_screen);
  
+        // create a handler to run the timer
         Handler handler = new Handler();
  
         // run a thread after 3 seconds to start the home screen
@@ -30,7 +30,7 @@ public class SplashScreen extends Activity {
  
             }
  
-        }, 3000); // time in milliseconds (1 second = 1000 milliseconds) until the run() method will be called
+        }, 3000); // perform this run after 3 seconds
  
     }
  
